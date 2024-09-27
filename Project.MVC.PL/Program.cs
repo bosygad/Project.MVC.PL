@@ -5,6 +5,7 @@ namespace Project.MVC.PL
         public static void Main(string[] args)
         {
             Console.WriteLine("Dev");
+            Console.WriteLine("Session01");
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
