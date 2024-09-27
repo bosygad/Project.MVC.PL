@@ -1,14 +1,31 @@
+using Microsoft.EntityFrameworkCore;
+using Project.DAL.Persistence.Data.Contexts;
+
 namespace Project.MVC.PL
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Dev");
+          
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+
+            builder.Services.AddDbContext<ApplicationDbContext>((optionsBuilder) => {
+                optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+            builder.Services.AddScoped<ApplicationDbContext>();
+            //builder.Services.AddScoped<DbContextOptions<ApplicationDbContext>>((ServiceProvider =>
+            //{
+            //    //var options = new DbContextOptions<ApplicationDbContext>();
+            //    var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+            //    optionsBuilder.UseSqlServer("");
+            //  var options = optionsBuilder.Options;
+            //    return options;
+            //}));
 
             var app = builder.Build();
 
