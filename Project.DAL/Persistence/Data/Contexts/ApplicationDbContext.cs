@@ -16,7 +16,11 @@ namespace Project.DAL.Persistence.Data.Contexts
 
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Server = .; Database = MVCAplication; Trusted_Connection = True; TrustServerCertificate = True;");
+        {
+            base.OnConfiguring(optionsBuilder);
+        }
+        //=>  optionsBuilder.UseSqlServer();
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
