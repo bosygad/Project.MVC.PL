@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Project.DAL.Models;
+using Project.DAL.Models.Departments;
 using System;
 using System.Collections.Generic;
 using System.Linq;

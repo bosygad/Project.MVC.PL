@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Project.DAL.Models;
+using Project.DAL.Models.Departments;
 using System;
 using System.Collections.Generic;
 using System.Linq;
