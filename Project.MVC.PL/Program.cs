@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Project.BLL.Services.Departments;
 using Project.DAL.Persistence.Data.Contexts;
+using Project.DAL.Persistence.Repositories.Departments;
 
 namespace Project.MVC.PL
 {
@@ -18,7 +20,8 @@ namespace Project.MVC.PL
             builder.Services.AddDbContext<ApplicationDbContext>((optionsBuilder) => {
                 optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
-            builder.Services.AddScoped<ApplicationDbContext>();
+            builder.Services.AddScoped<IDepartmentRepository , DepartmentRepository>();
+            builder.Services.AddScoped<IDepartmentService , DepartmentService>();
             //builder.Services.AddScoped<DbContextOptions<ApplicationDbContext>>((ServiceProvider =>
             //{
             //    //var options = new DbContextOptions<ApplicationDbContext>();
