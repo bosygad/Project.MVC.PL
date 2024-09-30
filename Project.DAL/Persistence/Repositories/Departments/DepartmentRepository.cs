@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Project.DAL.Models.Departments;
+using Project.DAL.Entities.Departments;
 using Project.DAL.Persistence.Data.Contexts;
 using System;
 using System.Collections.Generic;
@@ -26,6 +26,10 @@ namespace Project.DAL.Persistence.Repositories.Departments
                 return _dbContext.Departments.AsNoTracking().ToList();
             }
             return _dbContext.Departments.ToList();
+        }
+        public IQueryable<Department> GetAllAsIQueryable()
+        {
+            return _dbContext.Departments;
         }
         public Department? GetById(int id)
         {
@@ -57,10 +61,6 @@ namespace Project.DAL.Persistence.Repositories.Departments
             return _dbContext.SaveChanges();
         }
 
-      
-
-       
-
-      
+        
     }
 }

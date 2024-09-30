@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Project.DAL.Models.Departments;
+using Project.DAL.Entities.Departments;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +17,7 @@ namespace Project.DAL.Persistence.Data.Configuration.Departments
             builder.Property(D => D.Id).UseIdentityColumn(10, 10);
             builder.Property(D => D.Code).HasColumnType("varchar").HasMaxLength(50).IsRequired();
             builder.Property(D => D.Name).HasColumnType("varchar").HasMaxLength(20).IsRequired();
-            builder.Property(D => D.CreatedOn).HasDefaultValueSql("GETDATE()");
+            builder.Property(D => D.CreatedOn).HasDefaultValueSql("GETUTCDATE()");
             builder.Property(D => D.LastModifiedOn).HasComputedColumnSql("Convert(date,GETDATE())");
 
 
