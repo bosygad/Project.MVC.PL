@@ -26,7 +26,6 @@ namespace Project.BLL.Services.Departments
                 Id = department.Id,
                 Code = department.Code,
                 Name = department.Name,
-                Description = department.Description,
                 CreatedDate = department.CreatedDate,
             }).AsNoTracking().ToList();
 
