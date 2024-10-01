@@ -11,8 +11,8 @@ namespace Project.MVC.PL.Controllers.Departments
         private readonly IWebHostEnvironment _environment;
 
         public DepartmentController(
-            IDepartmentService departmentService ,
-            ILogger<DepartmentController> logger ,
+            IDepartmentService departmentService,
+            ILogger<DepartmentController> logger,
             IWebHostEnvironment environment)
         {
             _departmentService = departmentService;
@@ -42,24 +42,24 @@ namespace Project.MVC.PL.Controllers.Departments
             var Message = string.Empty;
             try
             {
-       
-                    var Result = _departmentService.CreateDepartment(department);
-                    if (Result > 0)
-                    {
-                        return RedirectToAction(nameof(Index));
-                    }
-                    else
-                    {
+
+                var Result = _departmentService.CreateDepartment(department);
+                if (Result > 0)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
                     Message = "Department is Not Created";
-                        ModelState.AddModelError(string.Empty,Message );
-                       return View(department);
-                    }
-                
+                    ModelState.AddModelError(string.Empty, Message);
+                    return View(department);
+                }
+
             }
             catch (Exception ex)
             {
 
-                _logger.LogError(ex,ex.Message);
+                _logger.LogError(ex, ex.Message);
 
                 if (_environment.IsDevelopment())
                 {
@@ -71,11 +71,34 @@ namespace Project.MVC.PL.Controllers.Departments
                 {
                     Message = "Department is Not Created";
 
-                return View("Erorr " , Message);
+                    return View("Erorr ", Message);
                 }
 
             }
 
         }
+
+
+        [HttpGet]
+        public ActionResult Details(int? id)
+        {
+            if(id is null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                var department = _departmentService.GetDepartmentById(id.Value);
+                if(department is null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return View(department);
+                }
+            }
+        }
     }
+
 }
