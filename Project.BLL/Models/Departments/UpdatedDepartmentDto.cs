@@ -12,7 +12,7 @@ namespace Project.BLL.Models.Departments
         public string Name { get; set; } = null!;
         public string Code { get; set; } = null!;
 
-        public string? Description { get; set; } = null!;
+        public string? Description { get; set; }
         public DateOnly? CreatedDate { get; set; }
     }
 }
