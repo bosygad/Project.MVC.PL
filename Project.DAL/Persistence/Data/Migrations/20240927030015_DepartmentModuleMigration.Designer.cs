@@ -25,7 +25,7 @@ namespace Project.DAL.Persistence.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Project.DAL.Models.Department", b =>
+            modelBuilder.Entity("Project.DAL.Entities.Department", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

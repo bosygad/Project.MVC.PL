@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.DAL.Models
+namespace Project.DAL.Entities.Departments
 {
     public class Department : ModelBase
     {
         public string Name { get; set; } = null!;
         public string Code { get; set; } = null!;
 
-        public string? Description { get; set; }
+        public string? Description { get; set; } 
         public DateOnly? CreatedDate { get; set; }
     }
 }
