@@ -18,7 +18,7 @@ namespace Project.DAL.Persistence.Data.Configuration.Departments
             builder.Property(D => D.Code).HasColumnType("varchar").HasMaxLength(50).IsRequired();
             builder.Property(D => D.Name).HasColumnType("varchar").HasMaxLength(20).IsRequired();
             builder.Property(D => D.CreatedOn).HasDefaultValueSql("GETUTCDATE()");
-            builder.Property(D => D.LastModifiedOn).HasComputedColumnSql("Convert(date,GETDATE())");
+           builder.Property(D => D.LastModifiedOn).HasComputedColumnSql("Convert(date,GETDATE())");
 
 
         }
