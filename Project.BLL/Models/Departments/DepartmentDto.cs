@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Project.BLL.Models.Departments
 {
-    public class DepartmentToReturnDto
+    public class DepartmentDto
     {
 
         public int Id { get; set; }

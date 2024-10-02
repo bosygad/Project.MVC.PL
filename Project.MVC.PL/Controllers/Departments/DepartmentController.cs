@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Project.BLL.Models.Departments;
 using Project.BLL.Services.Departments;
+using Project.DAL.Entities.Departments;
+using Project.MVC.PL.ViewModels.Departments;
 
 namespace Project.MVC.PL.Controllers.Departments
 {
@@ -26,6 +29,27 @@ namespace Project.MVC.PL.Controllers.Departments
             var departments = _departmentService.GetAllDepartments();
             return View(departments);
         }
+        [HttpGet]
+        public IActionResult Details(int? id)
+        {
+            if (id is null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                var department = _departmentService.GetDepartmentById(id.Value);
+                if (department is null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return View(department);
+                }
+            }
+        }
+       
         [HttpGet]
         public IActionResult Create()
         {
@@ -60,45 +84,79 @@ namespace Project.MVC.PL.Controllers.Departments
             {
 
                 _logger.LogError(ex, ex.Message);
-
-                if (_environment.IsDevelopment())
-                {
-                    Message = ex.Message;
-                    return View(department);
-                }
-
-                else
-                {
-                    Message = "Department is Not Created";
-
-                    return View("Erorr ", Message);
-                }
-
-            }
-
+                Message = _environment.IsDevelopment() ? ex.Message : "An Erorr Has Occured during Creating The Department";
+             }
+            ModelState.AddModelError(string.Empty, Message);
+            return View(department);
         }
-
-
         [HttpGet]
-        public ActionResult Details(int? id)
+        public IActionResult Edit(int? id)
         {
-            if(id is null)
+            if (id is null)
             {
                 return BadRequest();
             }
             else
             {
                 var department = _departmentService.GetDepartmentById(id.Value);
-                if(department is null)
+                if (department is null)
                 {
                     return NotFound();
                 }
                 else
                 {
-                    return View(department);
+                    return View(new DepartmentEditViewModel()
+                    {
+                        Code = department.Code,
+                        Name = department.Name,
+                        Description = department.Description,
+                        CreatedDate = department.CreatedDate,
+                    });
+                }
+            } }
+
+        [HttpPost]
+        public IActionResult Edit([FromRoute] int id ,DepartmentEditViewModel departmentViewModel)
+        {
+            var message = string.Empty;
+            if (!ModelState.IsValid)
+            {
+                return View(departmentViewModel);
+            }
+            try
+            {
+                var UpdateDepartment = new UpdatedDepartmentDto()
+                {
+                    Id = id,
+                    Code = departmentViewModel.Code,
+                    Name = departmentViewModel.Name,
+                    Description = departmentViewModel.Description,
+                    CreatedDate = departmentViewModel.CreatedDate,
+                };
+                var Updated = _departmentService.UpdateDepartment(UpdateDepartment) > 0;
+                if (Updated)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    message = "An Erorr Has Occured during Updating The Department ";
                 }
             }
-        }
-    }
+            catch (Exception ex)
+            {
 
+                _logger.LogError(ex, ex.Message);
+
+                message = _environment.IsDevelopment()?ex.Message : "An Erorr Has Occured during Updating The Department";
+
+                
+                
+            }
+            ModelState.AddModelError(string.Empty, message);
+            return View(departmentViewModel);
+        }
+
+
+    }
 }

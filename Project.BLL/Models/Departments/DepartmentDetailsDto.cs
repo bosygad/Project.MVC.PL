@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Project.BLL.Models.Departments
 {
-    public class DepartmentDetailsToReutrnDto  
+    public class DepartmentDetailsDto  
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
