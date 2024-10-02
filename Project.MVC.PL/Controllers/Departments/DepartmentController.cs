@@ -9,6 +9,7 @@ namespace Project.MVC.PL.Controllers.Departments
 {
     public class DepartmentController : Controller
     {
+        #region Services
         private readonly IDepartmentService _departmentService;
         private readonly ILogger<DepartmentController> _logger;
         private readonly IWebHostEnvironment _environment;
@@ -21,14 +22,19 @@ namespace Project.MVC.PL.Controllers.Departments
             _departmentService = departmentService;
             _logger = logger;
             _environment = environment;
-        }
+        } 
+        #endregion
 
+        #region Index
         [HttpGet]
         public IActionResult Index()
         {
             var departments = _departmentService.GetAllDepartments();
             return View(departments);
-        }
+        } 
+        #endregion
+
+        #region Details
         [HttpGet]
         public IActionResult Details(int? id)
         {
@@ -48,8 +54,10 @@ namespace Project.MVC.PL.Controllers.Departments
                     return View(department);
                 }
             }
-        }
-       
+        } 
+        #endregion
+
+        #region Create
         [HttpGet]
         public IActionResult Create()
         {
@@ -85,10 +93,14 @@ namespace Project.MVC.PL.Controllers.Departments
 
                 _logger.LogError(ex, ex.Message);
                 Message = _environment.IsDevelopment() ? ex.Message : "An Erorr Has Occured during Creating The Department";
-             }
+            }
             ModelState.AddModelError(string.Empty, Message);
             return View(department);
-        }
+        } 
+
+        #endregion
+
+        #region Update
         [HttpGet]
         public IActionResult Edit(int? id)
         {
@@ -113,10 +125,11 @@ namespace Project.MVC.PL.Controllers.Departments
                         CreatedDate = department.CreatedDate,
                     });
                 }
-            } }
+            }
+        }
 
         [HttpPost]
-        public IActionResult Edit([FromRoute] int id ,DepartmentEditViewModel departmentViewModel)
+        public IActionResult Edit([FromRoute] int id, DepartmentEditViewModel departmentViewModel)
         {
             var message = string.Empty;
             if (!ModelState.IsValid)
@@ -148,15 +161,67 @@ namespace Project.MVC.PL.Controllers.Departments
 
                 _logger.LogError(ex, ex.Message);
 
-                message = _environment.IsDevelopment()?ex.Message : "An Erorr Has Occured during Updating The Department";
+                message = _environment.IsDevelopment() ? ex.Message : "An Erorr Has Occured during Updating The Department";
 
-                
-                
+
+
             }
             ModelState.AddModelError(string.Empty, message);
             return View(departmentViewModel);
         }
 
+        #endregion
 
+        #region Delete
+        [HttpGet]
+        public IActionResult Delete(int? id)
+        {
+            if (id is null)
+            {
+                return BadRequest();
+
+            }
+            else
+            {
+                var department = _departmentService.GetDepartmentById(id.Value);
+                if (department is null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return View(department);
+                }
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var message = string.Empty;
+            try
+            {
+                var deleted = _departmentService.DeleteDepartment(id);
+                if (deleted)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    message = "An Erorr Has Occured during Deleting The Department";
+                }
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, ex.Message);
+
+                message = _environment.IsDevelopment() ? ex.Message : "An Erorr Has Occured during Deleting The Department";
+            }
+            //ModelState.AddModelError(string.Empty, message);
+            return RedirectToAction(nameof(Index));
+
+        } 
+        #endregion
     }
 }
