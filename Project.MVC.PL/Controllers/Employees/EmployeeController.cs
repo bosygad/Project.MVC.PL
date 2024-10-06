@@ -174,26 +174,7 @@ namespace Project.MVC.PL.Controllers.Employees
         #endregion
 
         #region Delete
-        [HttpGet]
-        public IActionResult Delete(int? id)
-        {
-            if(id is null)
-            {
-                return BadRequest();
-            }
-            else
-            {
-                var employee = _employeeService.GetEmployeeById(id.Value);
-                if(employee is null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    return View(employee);
-                }
-            }
-        }
+      
 
         [HttpPost]
         public IActionResult Delete(int id)
