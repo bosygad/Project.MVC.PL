@@ -53,7 +53,7 @@ namespace Project.DAL.Persistence.Repositories._Generic
         public int Delete(T entity)
         {
             entity.IsDeleted = true;
-            _dbContext.Set<T>().Update(entity);
+            _dbContext.Set<T>().Remove(entity);
             return _dbContext.SaveChanges();
         }
     }

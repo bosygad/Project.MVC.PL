@@ -16,5 +16,7 @@ namespace Project.BLL.Models.Departments
 
         [Display(Name = "Date Of Creation")]
         public DateOnly? CreatedDate { get; set; }
+
+       
     }
 }

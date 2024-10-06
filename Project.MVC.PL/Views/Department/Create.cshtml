@@ -6,32 +6,32 @@
 
 
 <h1 class="col-8 my-4">Create New Department</h1>
-<form action="/Department/Create" method="post" class="col-8">
+    <form  asp-action="Create" method="post" class="col-8">
      <div asp-validation-summary="ModelOnly"></div> 
-    <div cite="offset-3 form-group mb-3">
+    <div class="col-9 form-group mb-3">
         <label class="form-label " asp-for="Code" ></label>
         <input asp-for="Code" class="form-control"/>
         <span asp-validation-for="Code" class="text-danger"></span>
     </div>
-    <div cite="offset-3 form-group mb-3">
+    <div class="col-9 form-group mb-3">
         <label class="form-label " asp-for="Name"></label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-    <div cite="offset-3 form-group mb-3">
+    <div class="col-9 form-group mb-3">
         <label class="form-label " asp-for="Description"></label>
         <textarea asp-for="Description" class="form-control" ></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
-    <div cite="offset-3 form-group mb-3">
+    <div class="col-9 form-group mb-3">
         <label class="form-label " asp-for="CreatedDate"></label>
         <input type="date" asp-for="CreatedDate" class="form-control" />
         
     </div>
 
     <div class="mt-4">
-        <input type="submit"  value="Create" class="btn btn-primary" />
-        <a asp-action="Index" class="btn btn-light">| Back To List</a>
+        <input type="submit"  value="Create" class="btn btn-primary" /> |
+            <a asp-action="Index" class="btn btn-secondary"> Back To List</a>
     </div>
 </form>
 </section>

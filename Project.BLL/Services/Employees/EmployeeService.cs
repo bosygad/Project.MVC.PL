@@ -24,13 +24,13 @@ namespace Project.BLL.Services.Employees
             { 
             Id = employee.Id,
             Name = employee.Name,
-            Age = employee.Age,
-            Address = employee.Address,
-            IsActive = employee.IsActive,
-            Salary = employee.Salary,
             Email = employee.Email,
-            Gender = nameof(employee.Gender),
-            EmployeeType =nameof(employee.EmployeeType)
+            EmployeeType =employee.EmployeeType.ToString(),
+            Age = employee.Age,
+            Salary = employee.Salary,
+            IsActive = employee.IsActive,
+             Address = employee.Address,
+            Gender = employee.Gender.ToString(),
             }).AsNoTracking().ToList();
             return employee;
         }
@@ -51,8 +51,12 @@ namespace Project.BLL.Services.Employees
                     PhoneNumber = employee.PhoneNumber,
                     Email = employee.Email,
                     HiringDate = employee.HiringDate,
-                    Gender = nameof(employee.Gender),
-                    EmployeeType = nameof(employee.EmployeeType),
+                    Gender = employee.Gender.ToString(),
+                    EmployeeType = employee.EmployeeType.ToString(),
+                    CreatedBy = 1,
+                    CreatedOn = DateTime.UtcNow,
+                    LastModifiedBy=1,
+                    LastModifiedOn= DateTime.UtcNow,
                   
  
                 };

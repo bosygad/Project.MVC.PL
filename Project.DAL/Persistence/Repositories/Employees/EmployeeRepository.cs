@@ -15,5 +15,6 @@ namespace Project.DAL.Persistence.Repositories.Employees
         public EmployeeRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
         }
+
     }
 }

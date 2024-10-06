@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Project.BLL.Services.Departments;
+using Project.BLL.Services.Employees;
 using Project.DAL.Persistence.Data.Contexts;
 using Project.DAL.Persistence.Repositories.Departments;
+using Project.DAL.Persistence.Repositories.Employees;
 
 namespace Project.MVC.PL
 {
@@ -22,6 +24,10 @@ namespace Project.MVC.PL
             });
             builder.Services.AddScoped<IDepartmentRepository , DepartmentRepository>();
             builder.Services.AddScoped<IDepartmentService , DepartmentService>();
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+
+
             //builder.Services.AddScoped<DbContextOptions<ApplicationDbContext>>((ServiceProvider =>
             //{
             //    //var options = new DbContextOptions<ApplicationDbContext>();

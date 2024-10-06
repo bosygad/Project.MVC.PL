@@ -67,11 +67,11 @@ namespace Project.MVC.PL.Controllers.Departments
         [HttpPost]
         public IActionResult Create(CreatedDepartmentDto department)
         {
+            var Message = string.Empty;
             if (!ModelState.IsValid)
             {
                 return View(department);
             }
-            var Message = string.Empty;
             try
             {
 
@@ -123,6 +123,7 @@ namespace Project.MVC.PL.Controllers.Departments
                         Name = department.Name,
                         Description = department.Description,
                         CreatedDate = department.CreatedDate,
+                        
                     });
                 }
             }
@@ -145,6 +146,7 @@ namespace Project.MVC.PL.Controllers.Departments
                     Name = departmentViewModel.Name,
                     Description = departmentViewModel.Description,
                     CreatedDate = departmentViewModel.CreatedDate,
+                    
                 };
                 var Updated = _departmentService.UpdateDepartment(UpdateDepartment) > 0;
                 if (Updated)

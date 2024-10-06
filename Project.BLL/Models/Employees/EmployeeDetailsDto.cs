@@ -30,9 +30,13 @@ namespace Project.BLL.Models.Employees
 
         public string Gender { get; set; } = null!;
         public string EmployeeType { get; set; } = null!;
+        public bool IsDeleted { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public int LastModifiedBy { get; set; }
 
-     
-     
+        public DateTime? LastModifiedOn { get; set; }
+
 
     }
 }

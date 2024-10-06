@@ -46,11 +46,11 @@ namespace Project.BLL.Services.Departments
                     Name = departments.Name,
                     Description = departments.Description,
                     CreatedDate = departments.CreatedDate,
-                    CreatedBy = departments.CreatedBy,
-                    CreatedOn = departments.CreatedOn,
+                    CreatedBy =1,
+                    CreatedOn = DateTime.UtcNow,
 
-                    LastModifiedBy = departments.LastModifiedBy,
-                    LastModifiedOn = departments.LastModifiedOn,
+                    LastModifiedBy = 1,
+                   LastModifiedOn = DateTime.UtcNow,
                 };
             }
             return null;
@@ -63,10 +63,10 @@ namespace Project.BLL.Services.Departments
                 Name = departmentDto.Name,
                 Description = departmentDto.Description,
                 CreatedDate = departmentDto.CreatedDate,
-                //CreatedOn = DateTime.UtcNow,
+                CreatedOn = DateTime.UtcNow,
                 CreatedBy = 1,
                 LastModifiedBy = 1,
-                LastModifiedOn = DateTime.UtcNow,
+              LastModifiedOn = DateTime.UtcNow,
             };
             return _departmentRepository.Add(department);
 
