@@ -4,7 +4,7 @@ using Project.DAL.Persistence.Data.Contexts;
 
 namespace Project.DAL.Persistence.Repositories._Generic
 {
-    public class GenericRepositroy<T> where T : ModelBase
+    public class GenericRepositroy<T> : IGenericRepositroy<T> where T : ModelBase
     {
         private protected readonly ApplicationDbContext _dbContext;
 
@@ -22,21 +22,17 @@ namespace Project.DAL.Persistence.Repositories._Generic
             }
             return _dbContext.Set<T>().Where(X => !X.IsDeleted).ToList();
         }
-        public IQueryable<T> GetAllAsIQueryable()
+        public IQueryable<T> GetIQueryable()
+        {
+            return _dbContext.Set<T>();
+        }
+        public IEnumerable<T> GetIEnumerable()
         {
             return _dbContext.Set<T>();
         }
         public T? GetById(int id)
         {
-            //var T = _dbContext.Ts.Local.FirstOrDefault(D => D.Id == id);
-
-            // if (T is null)
-            // {
-            //     T = _dbContext.Ts.FirstOrDefault(D => D.Id == id);
-
-            // }
-            // return T;
-            //  return _dbContext.Find<T>(id);
+      
             return _dbContext.Set<T>().Find(id);
         }
         public int Add(T entity)
@@ -53,8 +49,10 @@ namespace Project.DAL.Persistence.Repositories._Generic
         public int Delete(T entity)
         {
             entity.IsDeleted = true;
-            _dbContext.Set<T>().Update(entity);
+            _dbContext.Set<T>().Remove(entity);
             return _dbContext.SaveChanges();
         }
+
+       
     }
 }

@@ -21,20 +21,20 @@ namespace Project.BLL.Services.Employees
         public IEnumerable<EmployeeDto> GetAllEmployees()
         {
            var employee = _employeeRepository
-                .GetAllAsIQueryable()
+                .GetIQueryable()
                 .Where(E => !E.IsDeleted)
                 .Select(employee => new EmployeeDto() 
-              { 
-                Id = employee.Id,
-                Name = employee.Name,
-                Email = employee.Email,
-                EmployeeType =employee.EmployeeType.ToString(),
-                Age = employee.Age,
-                Salary = employee.Salary,
-                IsActive = employee.IsActive,
-                Address = employee.Address,
-                Gender = employee.Gender.ToString(),
-              }).AsNoTracking().ToList();
+                                  { 
+                                    Id = employee.Id,
+                                    Name = employee.Name,
+                                    Email = employee.Email,
+                                    EmployeeType =employee.EmployeeType.ToString(),
+                                    Age = employee.Age,
+                                    Salary = employee.Salary,
+                                    IsActive = employee.IsActive,
+                                    Address = employee.Address,
+                                    Gender = employee.Gender.ToString(),
+                                  }).AsNoTracking().ToList();
             return employee;
 
            
