@@ -112,9 +112,16 @@ namespace Project.MVC.PL.Controllers.Employees
                     return View(new EmployeeEditViewModel()
                     {
                         Name = employee.Name,
-                        Age = employee.Age,
                         Address = employee.Address,
+                        Email = employee.Email,
+                        Age = employee.Age,
                         Salary = employee.Salary,
+                        PhoneNumber =employee.PhoneNumber,
+                        IsActive = employee.IsActive,
+                        HiringDate = employee.HiringDate,
+                        EmployeeType = employee.EmployeeType,
+                        Gender = employee.Gender
+
                     });
                 }
             }
@@ -134,10 +141,10 @@ namespace Project.MVC.PL.Controllers.Employees
                 {
                     Id = id,
                     Name = EmployeeViewModel.Name,
-                    Age= EmployeeViewModel.Age,
                     Address = EmployeeViewModel.Address,
-                    Salary = EmployeeViewModel.Salary,
                     Email  = EmployeeViewModel.Email,
+                    Age= EmployeeViewModel.Age,
+                    Salary = EmployeeViewModel.Salary,
                     PhoneNumber = EmployeeViewModel.PhoneNumber,
                     IsActive = EmployeeViewModel.IsActive,
                     HiringDate = EmployeeViewModel.HiringDate,
