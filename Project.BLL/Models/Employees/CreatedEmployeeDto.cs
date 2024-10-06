@@ -11,7 +11,7 @@ namespace Project.BLL.Models.Employees
     public class CreatedEmployeeDto
     {
         [MaxLength(50 , ErrorMessage = "Max Lenght Of Name Is 50 Char")]
-        [MinLength(5, ErrorMessage = "Min Lenght Of Name Is 50 Char")]
+        [MinLength(5, ErrorMessage = "Min Lenght Of Name Is 5 Char")]
 
         public string Name { get; set; } = null!;
 
@@ -36,6 +36,7 @@ namespace Project.BLL.Models.Employees
         [Display(Name = "Hiring Date")]
         public DateOnly? HiringDate { get; set; }
         public Gender Gender { get; set; }
+        [Display(Name = "Employee Type")]
         public EmployeeType EmployeeType { get; set; }
     }
 }

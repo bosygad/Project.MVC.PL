@@ -10,5 +10,6 @@ namespace Project.DAL.Common.Enums
     {
         PartTime = 1,
         FullTime = 2,
+        Internship = 3,
     }
 }
