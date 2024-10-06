@@ -9,9 +9,11 @@ namespace Project.MVC.PL
 {
     public class Program
     {
+        
         public static void Main(string[] args)
         {
-            
+            Console.WriteLine("Session 04");
+
 
             var builder = WebApplication.CreateBuilder(args);
 
