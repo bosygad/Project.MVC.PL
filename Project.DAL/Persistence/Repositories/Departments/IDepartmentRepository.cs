@@ -1,4 +1,5 @@
 ﻿using Project.DAL.Entities.Departments;
+using Project.DAL.Persistence.Repositories._Generic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +8,8 @@ using System.Threading.Tasks;
 
 namespace Project.DAL.Persistence.Repositories.Departments
 {
-    public interface IDepartmentRepository
+    public interface IDepartmentRepository : IGenericRepositroy<Department>
     {
-     IEnumerable<Department> GetAll(bool WithAsNoTracking = true);
-        IQueryable<Department> GetAllAsIQueryable();
-        Department? GetById(int id);
-        int Add(Department entity);
-        int Update(Department entity);
-        int Delete(Department entity);
+       
     }
 }

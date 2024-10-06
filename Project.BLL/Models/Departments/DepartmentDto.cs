@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Project.BLL.Models.Departments
 {
-    public class DepartmentToReturnDto
+    public class DepartmentDto
     {
 
         public int Id { get; set; }
@@ -17,7 +17,7 @@ namespace Project.BLL.Models.Departments
         public string Name { get; set; } = null!;
         public string Code { get; set; } = null!;
 
-        
+        public string Description { get; set; } = null!;
         [Display(Name = "Date Of Creation")]
         public DateOnly? CreatedDate { get; set; }
     }

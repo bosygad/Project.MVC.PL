@@ -1,0 +1,41 @@
+﻿
+@model DepartmentEditViewModel
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<section class=" row justify-content-center align-items-center">
+
+
+    <h1 class="col-8 my-4">Edit Department</h1>
+    <form asp-action="Edit" class="col-8">
+        <div asp-validation-summary="ModelOnly"></div>
+        <div class="col-9 form-group mb-3">
+            <label class="form-label " asp-for="Code"></label>
+            <input asp-for="Code" class="form-control" />
+            <span asp-validation-for="Code" class="text-danger"></span>
+        </div>
+        <div class="col-9 form-group mb-3">
+            <label class="form-label " asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="col-9 form-group mb-3">
+            <label class="form-label " asp-for="Description"></label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="col-9 form-group mb-3">
+            <label class="form-label " asp-for="CreatedDate"></label>
+            <input type="date" asp-for="CreatedDate" class="form-control" />
+
+        </div>
+
+        <div class="mt-4">
+            <input type="submit" value="Save" class="btn btn-success" /> | 
+            <a asp-action="Index" class="btn btn-secondary"> Cancel</a>
+        </div>
+    </form>
+</section>
+
+

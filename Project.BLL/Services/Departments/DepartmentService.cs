@@ -19,9 +19,9 @@ namespace Project.BLL.Services.Departments
         {
             _departmentRepository = departmentRepository;
         }
-        public IEnumerable<DepartmentToReturnDto> GetAllDepartments()
+        public IEnumerable<DepartmentDto> GetAllDepartments()
         {
-            var departments = _departmentRepository.GetAllAsIQueryable().Select(department => new DepartmentToReturnDto()
+            var departments = _departmentRepository.GetAllAsIQueryable().Select(department => new DepartmentDto()
             {
                 Id = department.Id,
                 Code = department.Code,
@@ -34,23 +34,23 @@ namespace Project.BLL.Services.Departments
 
         }
 
-        public DepartmentDetailsToReutrnDto? GetDepartmentById(int id)
+        public DepartmentDetailsDto? GetDepartmentById(int id)
         {
             var departments = _departmentRepository.GetById(id);
             if (departments is not null)
             {
-                return new DepartmentDetailsToReutrnDto()
+                return new DepartmentDetailsDto()
                 {
                     Id = departments.Id,
                     Code = departments.Code,
                     Name = departments.Name,
                     Description = departments.Description,
                     CreatedDate = departments.CreatedDate,
-                    CreatedBy = departments.CreatedBy,
-                    CreatedOn = departments.CreatedOn,
+                    CreatedBy =1,
+                    CreatedOn = DateTime.UtcNow,
 
-                    LastModifiedBy = departments.LastModifiedBy,
-                    LastModifiedOn = departments.LastModifiedOn,
+                    LastModifiedBy = 1,
+                   LastModifiedOn = DateTime.UtcNow,
                 };
             }
             return null;
@@ -63,10 +63,10 @@ namespace Project.BLL.Services.Departments
                 Name = departmentDto.Name,
                 Description = departmentDto.Description,
                 CreatedDate = departmentDto.CreatedDate,
-                //CreatedOn = DateTime.UtcNow,
+                CreatedOn = DateTime.UtcNow,
                 CreatedBy = 1,
                 LastModifiedBy = 1,
-                LastModifiedOn = DateTime.UtcNow,
+              LastModifiedOn = DateTime.UtcNow,
             };
             return _departmentRepository.Add(department);
 
