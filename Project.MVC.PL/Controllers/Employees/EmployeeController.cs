@@ -59,6 +59,7 @@ namespace Project.MVC.PL.Controllers.Employees
         public IActionResult Create() { return View(); }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(CreatedEmployeeDto employeeDto) 
         {
             if (!ModelState.IsValid)
@@ -129,6 +130,7 @@ namespace Project.MVC.PL.Controllers.Employees
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Edit([FromRoute] int id , EmployeeEditViewModel EmployeeViewModel) 
         {
         var message = string.Empty;
@@ -177,6 +179,7 @@ namespace Project.MVC.PL.Controllers.Employees
       
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             var message = string.Empty;

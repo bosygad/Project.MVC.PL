@@ -59,12 +59,14 @@ namespace Project.MVC.PL.Controllers.Departments
 
         #region Create
         [HttpGet]
+      
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(CreatedDepartmentDto department)
         {
             var Message = string.Empty;
@@ -130,6 +132,7 @@ namespace Project.MVC.PL.Controllers.Departments
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Edit([FromRoute] int id, DepartmentEditViewModel departmentViewModel)
         {
             var message = string.Empty;
@@ -198,6 +201,7 @@ namespace Project.MVC.PL.Controllers.Departments
         }
 
         [HttpPost]
+          [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             var message = string.Empty;
