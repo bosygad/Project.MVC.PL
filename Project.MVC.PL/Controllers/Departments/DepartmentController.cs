@@ -29,6 +29,11 @@ namespace Project.MVC.PL.Controllers.Departments
         [HttpGet]
         public IActionResult Index()
         {
+
+            //ViewData["Message"] ="ViweData";
+            //ViewBag.Message = "ViewBag";
+          
+
             var departments = _departmentService.GetAllDepartments();
             return View(departments);
         } 
