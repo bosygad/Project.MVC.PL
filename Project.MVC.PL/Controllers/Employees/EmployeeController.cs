@@ -60,16 +60,31 @@ namespace Project.MVC.PL.Controllers.Employees
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CreatedEmployeeDto employeeDto) 
+        public IActionResult Create(EmployeeViewModel employeeVM) 
         {
             if (!ModelState.IsValid)
             {
-                return View(employeeDto);
+                return View(employeeVM);
             }
             var message = string.Empty;
             try
             {
-                var Result = _employeeService.CreateEmployee(employeeDto);
+                var employee = new CreatedEmployeeDto()
+                {
+                  
+                    Name = employeeVM.Name,
+                    Address = employeeVM.Address,
+                    Email = employeeVM.Email,
+                    Age = employeeVM.Age,
+                    Salary = employeeVM.Salary,
+                    PhoneNumber = employeeVM.PhoneNumber,
+                    IsActive = employeeVM.IsActive,
+                    HiringDate = employeeVM.HiringDate,
+                    EmployeeType = employeeVM.EmployeeType,
+                    Gender = employeeVM.Gender
+
+                };
+                var Result = _employeeService.CreateEmployee(employee);
                  if(Result > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -78,8 +93,8 @@ namespace Project.MVC.PL.Controllers.Employees
                 else
                 {
                     message = "Employee IS Not Created";
-                    ModelState.AddModelError(string.Empty, message);
-                    return View(employeeDto);
+                    //ModelState.AddModelError(string.Empty, message);
+                    //return View(employeeDto);
                 }
             }
             catch (Exception ex)
@@ -88,7 +103,7 @@ namespace Project.MVC.PL.Controllers.Employees
                 message = _environment.IsDevelopment()? ex.Message : "An Erorr Has Occured during Creating The Employee";
             }
             ModelState.AddModelError(string.Empty , message);
-            return View(employeeDto);
+            return View(employeeVM);
         }
 
         #endregion
@@ -110,7 +125,7 @@ namespace Project.MVC.PL.Controllers.Employees
                 }
                 else
                 {
-                    return View(new EmployeeEditViewModel()
+                    return View(new EmployeeViewModel()
                     {
                         Name = employee.Name,
                         Address = employee.Address,
@@ -131,7 +146,7 @@ namespace Project.MVC.PL.Controllers.Employees
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id , EmployeeEditViewModel EmployeeViewModel) 
+        public IActionResult Edit([FromRoute] int id , EmployeeViewModel EmployeeViewModel) 
         {
         var message = string.Empty;
             if (!ModelState.IsValid) {

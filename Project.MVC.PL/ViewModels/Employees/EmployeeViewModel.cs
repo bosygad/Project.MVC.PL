@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Project.MVC.PL.ViewModels.Employees
 {
-    public class EmployeeEditViewModel
+    public class EmployeeViewModel
     {
 
 

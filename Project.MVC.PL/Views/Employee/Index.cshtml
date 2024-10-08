@@ -44,8 +44,9 @@
                     <td>@Html.DisplayFor(E =>employee.EmployeeType)</td>
                     <td>@employee.IsActive</td>
                     <td>@Html.DisplayFor(E => employee.Gender)</td>
-
-                    <td>
+                    <partial name="_ButtonsPartial" model="@employee.Id" />
+                    
+                   @*  <td>
 
                         <a asp-controller="Employee" asp-action="Details" asp-route-id="@employee.Id" class="btn btn-warning"><i class="fa-solid fa-eye"></i> Details</a>
 
@@ -57,12 +58,12 @@
                     </td>
                     <td>
 
-                        @* <a asp-controller="Department" asp-action="Delete" asp-route-id="@department.Id" class="btn btn-danger"><i class="fa-solid fa-trash"></i> Delete</a> *@
+                        @* <a asp-controller="Department" asp-action="Delete" asp-route-id="@department.Id" class="btn btn-danger"><i class="fa-solid fa-trash"></i> Delete</a> @
 
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
                             <i class="fa-solid fa-trash"></i> Delete
                         </button>
-                    </td>
+                    </td> *@
                 </tr>
                 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">

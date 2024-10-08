@@ -67,17 +67,25 @@ namespace Project.MVC.PL.Controllers.Departments
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CreatedDepartmentDto department)
+        public IActionResult Create(DepartmentViewModel departmentVM)
         {
             var Message = string.Empty;
             if (!ModelState.IsValid)
             {
-                return View(department);
+                return View(departmentVM);
             }
             try
             {
+                var CreateDepartment = new CreatedDepartmentDto()
+                {
+                   
+                    Code = departmentVM.Code,
+                    Name = departmentVM.Name,
+                    Description = departmentVM.Description,
+                    CreatedDate = departmentVM.CreatedDate,
 
-                var Result = _departmentService.CreateDepartment(department);
+                };
+                var Result = _departmentService.CreateDepartment(CreateDepartment);
                 if (Result > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -85,8 +93,8 @@ namespace Project.MVC.PL.Controllers.Departments
                 else
                 {
                     Message = "Department is Not Created";
-                    ModelState.AddModelError(string.Empty, Message);
-                    return View(department);
+                    //ModelState.AddModelError(string.Empty, Message);
+                    //return View(CreateDepartment);
                 }
 
             }
@@ -97,7 +105,7 @@ namespace Project.MVC.PL.Controllers.Departments
                 Message = _environment.IsDevelopment() ? ex.Message : "An Erorr Has Occured during Creating The Department";
             }
             ModelState.AddModelError(string.Empty, Message);
-            return View(department);
+            return View(departmentVM);
         } 
 
         #endregion
@@ -119,7 +127,7 @@ namespace Project.MVC.PL.Controllers.Departments
                 }
                 else
                 {
-                    return View(new DepartmentEditViewModel()
+                    return View(new DepartmentViewModel()
                     {
                         Code = department.Code,
                         Name = department.Name,
@@ -133,7 +141,7 @@ namespace Project.MVC.PL.Controllers.Departments
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, DepartmentEditViewModel departmentViewModel)
+        public IActionResult Edit([FromRoute] int id, DepartmentViewModel departmentViewModel)
         {
             var message = string.Empty;
             if (!ModelState.IsValid)

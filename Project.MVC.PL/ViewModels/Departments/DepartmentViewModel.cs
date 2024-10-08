@@ -2,7 +2,7 @@
 
 namespace Project.MVC.PL.ViewModels.Departments
 {
-    public class DepartmentEditViewModel
+    public class DepartmentViewModel
     {
         public string Name { get; set; } = null!;
         public string Code { get; set; } = null!;
