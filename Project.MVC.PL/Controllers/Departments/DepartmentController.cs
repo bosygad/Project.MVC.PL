@@ -90,18 +90,22 @@ namespace Project.MVC.PL.Controllers.Departments
                     CreatedDate = departmentVM.CreatedDate,
 
                 };
-                var Result = _departmentService.CreateDepartment(CreateDepartment);
-                if (Result > 0)
+
+
+                var Created = _departmentService.CreateDepartment(CreateDepartment) > 0;
+                if (Created)
                 {
-                    return RedirectToAction(nameof(Index));
+                    TempData["Message"] = "Department is Created"; ;
+                    //return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    Message = "Department is Not Created";
+                    TempData["Message"] = "Department is Not Created"; ;
+                    //Message = "Department is Not Created";
                     //ModelState.AddModelError(string.Empty, Message);
                     //return View(CreateDepartment);
                 }
-
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
