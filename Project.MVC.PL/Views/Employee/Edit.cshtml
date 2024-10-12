@@ -1,6 +1,7 @@
-﻿@model EmployeeEditViewModel
+﻿@model EmployeeViewModel
 @{
     ViewData["Title"] = "Edit";
+    ViewBag.Action = "Edit";
 }
 
 
@@ -8,7 +9,8 @@
 
 
     <h1 class="col-8 my-3">Edit Employee</h1>
-    <form asp-action="Edit" method="post" class="col-8">
+    <partial name="Partial/CreateOrEditEmployeePartial" />
+   @*  <form asp-action="Edit" method="post" class="col-8">
         <div asp-validation-summary="ModelOnly"></div>
         <div class="col-9 form-group mb-3">
             <label class="form-label " asp-for="Name"></label>
@@ -59,7 +61,7 @@
             <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-control">
             <option value="">Select Gender</option>
             </select> *@
-            @*  <span asp-validation-for="Gender" class="text-danger"></span> *@
+            @*  <span asp-validation-for="Gender" class="text-danger"></span> @
         </div>
         <div class="col-9 form-group mb-3">
             <label class="control-label " asp-for="EmployeeType"></label><br />
@@ -77,7 +79,7 @@
             @*  <select asp-for="EmployeeType" asp-items="Html.GetEnumSelectList<EmployeeType>()" class="form-control">
             <option value="">Choose...</option>
             </select>
-            <span asp-validation-for="EmployeeType" class="text-danger"></span> *@
+            <span asp-validation-for="EmployeeType" class="text-danger"></span> @
         </div>
         <div class="col-9 form-group mb-3">
             <input asp-for="IsActive" class="form-check-input mb-3" />
@@ -94,5 +96,13 @@
             <input type="submit" value="Save" class="btn btn-success" /> |
             <a asp-controller="Employee" asp-action="Index" class="btn btn-secondary"> Cancel</a>
         </div>
-    </form>
+    </form> *@
 </section>
+
+@section ValidationScripts {
+
+
+   @*  <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script> *@
+    <partial name="_ValidationScriptsPartial" />
+}

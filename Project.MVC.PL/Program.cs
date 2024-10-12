@@ -9,9 +9,11 @@ namespace Project.MVC.PL
 {
     public class Program
     {
+        
         public static void Main(string[] args)
         {
-            
+           
+
 
             var builder = WebApplication.CreateBuilder(args);
 
@@ -19,8 +21,10 @@ namespace Project.MVC.PL
             builder.Services.AddControllersWithViews();
 
 
-            builder.Services.AddDbContext<ApplicationDbContext>((optionsBuilder) => {
-                optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            builder.Services.AddDbContext<ApplicationDbContext>(optionsBuilder => {
+                optionsBuilder
+                .UseLazyLoadingProxies()
+                .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
             builder.Services.AddScoped<IDepartmentRepository , DepartmentRepository>();
             builder.Services.AddScoped<IDepartmentService , DepartmentService>();

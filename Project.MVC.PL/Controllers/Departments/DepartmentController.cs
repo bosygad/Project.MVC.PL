@@ -29,6 +29,11 @@ namespace Project.MVC.PL.Controllers.Departments
         [HttpGet]
         public IActionResult Index()
         {
+
+            //ViewData["Message"] ="ViweData";
+            //ViewBag.Message = "ViewBag";
+          
+
             var departments = _departmentService.GetAllDepartments();
             return View(departments);
         } 
@@ -59,34 +64,48 @@ namespace Project.MVC.PL.Controllers.Departments
 
         #region Create
         [HttpGet]
+      
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(CreatedDepartmentDto department)
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(DepartmentViewModel departmentVM)
         {
             var Message = string.Empty;
             if (!ModelState.IsValid)
             {
-                return View(department);
+                return View(departmentVM);
             }
             try
             {
-
-                var Result = _departmentService.CreateDepartment(department);
-                if (Result > 0)
+                var CreateDepartment = new CreatedDepartmentDto()
                 {
-                    return RedirectToAction(nameof(Index));
+                   
+                    Code = departmentVM.Code,
+                    Name = departmentVM.Name,
+                    Description = departmentVM.Description,
+                    CreatedDate = departmentVM.CreatedDate,
+
+                };
+
+
+                var Created = _departmentService.CreateDepartment(CreateDepartment) > 0;
+                if (Created)
+                {
+                    TempData["Message"] = "Department is Created"; ;
+                    //return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    Message = "Department is Not Created";
-                    ModelState.AddModelError(string.Empty, Message);
-                    return View(department);
+                    TempData["Message"] = "Department is Not Created"; ;
+                    //Message = "Department is Not Created";
+                    //ModelState.AddModelError(string.Empty, Message);
+                    //return View(CreateDepartment);
                 }
-
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
@@ -95,7 +114,7 @@ namespace Project.MVC.PL.Controllers.Departments
                 Message = _environment.IsDevelopment() ? ex.Message : "An Erorr Has Occured during Creating The Department";
             }
             ModelState.AddModelError(string.Empty, Message);
-            return View(department);
+            return View(departmentVM);
         } 
 
         #endregion
@@ -117,7 +136,7 @@ namespace Project.MVC.PL.Controllers.Departments
                 }
                 else
                 {
-                    return View(new DepartmentEditViewModel()
+                    return View(new DepartmentViewModel()
                     {
                         Code = department.Code,
                         Name = department.Name,
@@ -130,7 +149,8 @@ namespace Project.MVC.PL.Controllers.Departments
         }
 
         [HttpPost]
-        public IActionResult Edit([FromRoute] int id, DepartmentEditViewModel departmentViewModel)
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit([FromRoute] int id, DepartmentViewModel departmentViewModel)
         {
             var message = string.Empty;
             if (!ModelState.IsValid)
@@ -198,11 +218,13 @@ namespace Project.MVC.PL.Controllers.Departments
         }
 
         [HttpPost]
+          [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             var message = string.Empty;
             try
             {
+                
                 var deleted = _departmentService.DeleteDepartment(id);
                 if (deleted)
                 {

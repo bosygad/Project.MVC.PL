@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Project.BLL.Models.Employees;
+using Project.BLL.Services.Departments;
 using Project.BLL.Services.Employees;
 using Project.MVC.PL.ViewModels.Employees;
 
@@ -9,13 +10,18 @@ namespace Project.MVC.PL.Controllers.Employees
     {
         #region Srevices
         private readonly IEmployeeService _employeeService;
+      
         private readonly ILogger<EmployeeController> _logger;
         private readonly IWebHostEnvironment _environment;
 
 
-        public EmployeeController(IEmployeeService employeeService, ILogger<EmployeeController> logger, IWebHostEnvironment environment)
+        public EmployeeController(IEmployeeService employeeService,
+           
+            ILogger<EmployeeController> logger,
+            IWebHostEnvironment environment)
         {
             _employeeService = employeeService;
+           
             _logger = logger;
             _environment = environment;
         }
@@ -56,19 +62,38 @@ namespace Project.MVC.PL.Controllers.Employees
 
         #region Create
         [HttpGet]
-        public IActionResult Create() { return View(); }
+        public IActionResult Create(/*[FromServices]IDepartmentService departmentService*/) {
+            //ViewData["Departments"] = departmentService.GetAllDepartments();
+            return View(); }
 
         [HttpPost]
-        public IActionResult Create(CreatedEmployeeDto employeeDto) 
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(EmployeeViewModel employeeVM) 
         {
             if (!ModelState.IsValid)
             {
-                return View(employeeDto);
+                return View(employeeVM);
             }
             var message = string.Empty;
             try
             {
-                var Result = _employeeService.CreateEmployee(employeeDto);
+                var employee = new CreatedEmployeeDto()
+                {
+                  
+                    Name = employeeVM.Name,
+                    Address = employeeVM.Address,
+                    Email = employeeVM.Email,
+                    Age = employeeVM.Age,
+                    Salary = employeeVM.Salary,
+                    PhoneNumber = employeeVM.PhoneNumber,
+                    IsActive = employeeVM.IsActive,
+                    HiringDate = employeeVM.HiringDate,
+                    EmployeeType = employeeVM.EmployeeType,
+                    Gender = employeeVM.Gender,
+                    DepartmentId= employeeVM.DepartmentId,
+
+                };
+                var Result = _employeeService.CreateEmployee(employee);
                  if(Result > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -77,8 +102,8 @@ namespace Project.MVC.PL.Controllers.Employees
                 else
                 {
                     message = "Employee IS Not Created";
-                    ModelState.AddModelError(string.Empty, message);
-                    return View(employeeDto);
+                    //ModelState.AddModelError(string.Empty, message);
+                    //return View(employeeDto);
                 }
             }
             catch (Exception ex)
@@ -87,14 +112,14 @@ namespace Project.MVC.PL.Controllers.Employees
                 message = _environment.IsDevelopment()? ex.Message : "An Erorr Has Occured during Creating The Employee";
             }
             ModelState.AddModelError(string.Empty , message);
-            return View(employeeDto);
+            return View(employeeVM);
         }
 
         #endregion
 
         #region Update
         [HttpGet]
-        public IActionResult Edit(int? id) 
+        public IActionResult Edit(int? id /*, [FromServices] IDepartmentService departmentService*/) 
         {
             if (id is null)
             {
@@ -109,7 +134,8 @@ namespace Project.MVC.PL.Controllers.Employees
                 }
                 else
                 {
-                    return View(new EmployeeEditViewModel()
+                    //ViewData["Departments"] = departmentService.GetAllDepartments();
+                    return View(new EmployeeViewModel()
                     {
                         Name = employee.Name,
                         Address = employee.Address,
@@ -120,7 +146,9 @@ namespace Project.MVC.PL.Controllers.Employees
                         IsActive = employee.IsActive,
                         HiringDate = employee.HiringDate,
                         EmployeeType = employee.EmployeeType,
-                        Gender = employee.Gender
+                        Gender = employee.Gender,
+                        
+                        
 
                     });
                 }
@@ -129,7 +157,8 @@ namespace Project.MVC.PL.Controllers.Employees
         }
 
         [HttpPost]
-        public IActionResult Edit([FromRoute] int id , EmployeeEditViewModel EmployeeViewModel) 
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit([FromRoute] int id , EmployeeViewModel EmployeeViewModel) 
         {
         var message = string.Empty;
             if (!ModelState.IsValid) {
@@ -149,7 +178,8 @@ namespace Project.MVC.PL.Controllers.Employees
                     IsActive = EmployeeViewModel.IsActive,
                     HiringDate = EmployeeViewModel.HiringDate,
                     EmployeeType = EmployeeViewModel.EmployeeType,
-                    Gender = EmployeeViewModel.Gender
+                    Gender = EmployeeViewModel.Gender,
+                    DepartmentId = EmployeeViewModel.DepartmentId,
 
                 };
               var UpdatedEmployee = _employeeService.UpdateEmployee(employee) > 0;
@@ -177,6 +207,7 @@ namespace Project.MVC.PL.Controllers.Employees
       
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             var message = string.Empty;

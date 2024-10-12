@@ -37,6 +37,7 @@ namespace Project.BLL.Models.Employees
 
         public DateTime? LastModifiedOn { get; set; }
 
+        public string? Department { get; set; }
 
     }
 }

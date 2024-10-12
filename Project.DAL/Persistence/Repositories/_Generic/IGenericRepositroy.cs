@@ -10,7 +10,9 @@ namespace Project.DAL.Persistence.Repositories._Generic
     public interface IGenericRepositroy<T> where T :  ModelBase
     {
         IEnumerable<T> GetAll(bool WithAsNoTracking = true);
-        IQueryable<T> GetAllAsIQueryable();
+        IQueryable<T> GetIQueryable();
+        IEnumerable<T> GetIEnumerable();
+
         T? GetById(int id);
         int Add(T entity);
         int Update(T entity);

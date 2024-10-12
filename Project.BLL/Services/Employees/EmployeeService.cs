@@ -21,20 +21,22 @@ namespace Project.BLL.Services.Employees
         public IEnumerable<EmployeeDto> GetAllEmployees()
         {
            var employee = _employeeRepository
-                .GetAllAsIQueryable()
+                .GetIQueryable()
                 .Where(E => !E.IsDeleted)
+                .Include(E => E.Department)
                 .Select(employee => new EmployeeDto() 
-              { 
-                Id = employee.Id,
-                Name = employee.Name,
-                Email = employee.Email,
-                EmployeeType =employee.EmployeeType.ToString(),
-                Age = employee.Age,
-                Salary = employee.Salary,
-                IsActive = employee.IsActive,
-                Address = employee.Address,
-                Gender = employee.Gender.ToString(),
-              }).AsNoTracking().ToList();
+                                  { 
+                                    Id = employee.Id,
+                                    Name = employee.Name,
+                                    Email = employee.Email,
+                                    EmployeeType =employee.EmployeeType.ToString(),
+                                    Age = employee.Age,
+                                    Salary = employee.Salary,
+                                    IsActive = employee.IsActive,
+                                    Address = employee.Address,
+                                    Gender = employee.Gender.ToString(),
+                                    Department = employee.Department.Name
+                                  }).AsNoTracking().ToList();
             return employee;
 
            
@@ -62,7 +64,7 @@ namespace Project.BLL.Services.Employees
                     CreatedOn = DateTime.UtcNow,
                     LastModifiedBy=1,
                     LastModifiedOn= DateTime.UtcNow,
-                  
+                  Department = employee.Department.Name
  
                 };
                 
@@ -83,6 +85,7 @@ namespace Project.BLL.Services.Employees
                 HiringDate = employeeDto.HiringDate,
                 Gender = employeeDto.Gender,
                 EmployeeType = employeeDto.EmployeeType,
+                DepartmentId = employeeDto.DepartmentId,
                 CreatedBy = 1,
                 LastModifiedBy = 1,
                 LastModifiedOn = DateTime.UtcNow,
@@ -107,6 +110,7 @@ namespace Project.BLL.Services.Employees
                 PhoneNumber = employeeDto.PhoneNumber,
                 Gender= employeeDto.Gender,
                 EmployeeType = employeeDto.EmployeeType,
+                DepartmentId = employeeDto.DepartmentId,
                 CreatedBy = 1,
                 LastModifiedBy = 1,
                 LastModifiedOn = DateTime.UtcNow,
