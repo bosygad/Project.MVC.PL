@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project.DAL.Entities.Empeloyees;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,5 +14,7 @@ namespace Project.DAL.Entities.Departments
 
         public string? Description { get; set; } 
         public DateOnly? CreatedDate { get; set; }
+
+        public virtual ICollection<Employee> Employees { get; set; } = new HashSet<Employee>();
     }
 }

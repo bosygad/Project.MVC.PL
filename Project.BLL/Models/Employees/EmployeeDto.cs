@@ -24,5 +24,7 @@ namespace Project.BLL.Models.Employees
         public string? Email { get; set; }
         public string Gender { get; set; } = null!;
         public string EmployeeType { get; set; } = null!;
+
+        public string? Department { get; set; } 
     }
 }

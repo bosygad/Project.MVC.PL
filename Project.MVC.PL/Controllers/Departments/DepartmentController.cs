@@ -224,6 +224,7 @@ namespace Project.MVC.PL.Controllers.Departments
             var message = string.Empty;
             try
             {
+                
                 var deleted = _departmentService.DeleteDepartment(id);
                 if (deleted)
                 {

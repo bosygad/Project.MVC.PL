@@ -11,5 +11,6 @@ namespace Project.MVC.PL.ViewModels.Departments
 
         [Display(Name = "Creation Date")]
         public DateOnly? CreatedDate { get; set; }
+
     }
 }

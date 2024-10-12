@@ -16,12 +16,13 @@ namespace Project.DAL.Persistence.Data.Contexts
         {
 
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-        }
-        //=>  optionsBuilder.UseSqlServer();
-        
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseLazyLoadingProxies();
+        //    base.OnConfiguring(optionsBuilder);
+        //}
+        ////=>  optionsBuilder.UseSqlServer();
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

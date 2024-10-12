@@ -23,6 +23,7 @@ namespace Project.BLL.Services.Employees
            var employee = _employeeRepository
                 .GetIQueryable()
                 .Where(E => !E.IsDeleted)
+                .Include(E => E.Department)
                 .Select(employee => new EmployeeDto() 
                                   { 
                                     Id = employee.Id,
@@ -34,6 +35,7 @@ namespace Project.BLL.Services.Employees
                                     IsActive = employee.IsActive,
                                     Address = employee.Address,
                                     Gender = employee.Gender.ToString(),
+                                    Department = employee.Department.Name
                                   }).AsNoTracking().ToList();
             return employee;
 
@@ -62,7 +64,7 @@ namespace Project.BLL.Services.Employees
                     CreatedOn = DateTime.UtcNow,
                     LastModifiedBy=1,
                     LastModifiedOn= DateTime.UtcNow,
-                  
+                  Department = employee.Department.Name
  
                 };
                 
@@ -83,6 +85,7 @@ namespace Project.BLL.Services.Employees
                 HiringDate = employeeDto.HiringDate,
                 Gender = employeeDto.Gender,
                 EmployeeType = employeeDto.EmployeeType,
+                DepartmentId = employeeDto.DepartmentId,
                 CreatedBy = 1,
                 LastModifiedBy = 1,
                 LastModifiedOn = DateTime.UtcNow,
@@ -107,6 +110,7 @@ namespace Project.BLL.Services.Employees
                 PhoneNumber = employeeDto.PhoneNumber,
                 Gender= employeeDto.Gender,
                 EmployeeType = employeeDto.EmployeeType,
+                DepartmentId = employeeDto.DepartmentId,
                 CreatedBy = 1,
                 LastModifiedBy = 1,
                 LastModifiedOn = DateTime.UtcNow,

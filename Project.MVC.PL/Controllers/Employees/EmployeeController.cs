@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Project.BLL.Models.Employees;
+using Project.BLL.Services.Departments;
 using Project.BLL.Services.Employees;
 using Project.MVC.PL.ViewModels.Employees;
 
@@ -9,13 +10,18 @@ namespace Project.MVC.PL.Controllers.Employees
     {
         #region Srevices
         private readonly IEmployeeService _employeeService;
+      
         private readonly ILogger<EmployeeController> _logger;
         private readonly IWebHostEnvironment _environment;
 
 
-        public EmployeeController(IEmployeeService employeeService, ILogger<EmployeeController> logger, IWebHostEnvironment environment)
+        public EmployeeController(IEmployeeService employeeService,
+           
+            ILogger<EmployeeController> logger,
+            IWebHostEnvironment environment)
         {
             _employeeService = employeeService;
+           
             _logger = logger;
             _environment = environment;
         }
@@ -56,7 +62,9 @@ namespace Project.MVC.PL.Controllers.Employees
 
         #region Create
         [HttpGet]
-        public IActionResult Create() { return View(); }
+        public IActionResult Create(/*[FromServices]IDepartmentService departmentService*/) {
+            //ViewData["Departments"] = departmentService.GetAllDepartments();
+            return View(); }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -81,7 +89,8 @@ namespace Project.MVC.PL.Controllers.Employees
                     IsActive = employeeVM.IsActive,
                     HiringDate = employeeVM.HiringDate,
                     EmployeeType = employeeVM.EmployeeType,
-                    Gender = employeeVM.Gender
+                    Gender = employeeVM.Gender,
+                    DepartmentId= employeeVM.DepartmentId,
 
                 };
                 var Result = _employeeService.CreateEmployee(employee);
@@ -110,7 +119,7 @@ namespace Project.MVC.PL.Controllers.Employees
 
         #region Update
         [HttpGet]
-        public IActionResult Edit(int? id) 
+        public IActionResult Edit(int? id /*, [FromServices] IDepartmentService departmentService*/) 
         {
             if (id is null)
             {
@@ -125,6 +134,7 @@ namespace Project.MVC.PL.Controllers.Employees
                 }
                 else
                 {
+                    //ViewData["Departments"] = departmentService.GetAllDepartments();
                     return View(new EmployeeViewModel()
                     {
                         Name = employee.Name,
@@ -136,7 +146,9 @@ namespace Project.MVC.PL.Controllers.Employees
                         IsActive = employee.IsActive,
                         HiringDate = employee.HiringDate,
                         EmployeeType = employee.EmployeeType,
-                        Gender = employee.Gender
+                        Gender = employee.Gender,
+                        
+                        
 
                     });
                 }
@@ -166,7 +178,8 @@ namespace Project.MVC.PL.Controllers.Employees
                     IsActive = EmployeeViewModel.IsActive,
                     HiringDate = EmployeeViewModel.HiringDate,
                     EmployeeType = EmployeeViewModel.EmployeeType,
-                    Gender = EmployeeViewModel.Gender
+                    Gender = EmployeeViewModel.Gender,
+                    DepartmentId = EmployeeViewModel.DepartmentId,
 
                 };
               var UpdatedEmployee = _employeeService.UpdateEmployee(employee) > 0;
