@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Project.BLL.Models.Employees;
 using Project.DAL.Entities.Empeloyees;
 using Project.DAL.Persistence.Repositories.Employees;
@@ -18,11 +19,11 @@ namespace Project.BLL.Services.Employees
         {
             _employeeRepository = employeeRepository;
         }
-        public IEnumerable<EmployeeDto> GetAllEmployees()
+        public IEnumerable<EmployeeDto> GetEmployees(string search)
         {
            var employee = _employeeRepository
                 .GetIQueryable()
-                .Where(E => !E.IsDeleted)
+                .Where(E => !E.IsDeleted && (string.IsNullOrEmpty(search) || E.Name.ToLower().Contains(search.ToLower())))
                 .Include(E => E.Department)
                 .Select(employee => new EmployeeDto() 
                                   { 

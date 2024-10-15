@@ -9,7 +9,7 @@ namespace Project.BLL.Services.Employees
 {
     public interface IEmployeeService
     {
-        IEnumerable<EmployeeDto> GetAllEmployees();
+        IEnumerable<EmployeeDto> GetEmployees(string search);
         EmployeeDetailsDto? GetEmployeeById(int id);
         int CreateEmployee(CreatedEmployeeDto employeeDto);
         int UpdateEmployee(UpdatedEmployeeDto employeeDto);

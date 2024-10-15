@@ -13,7 +13,7 @@ namespace Project.MVC.PL
         public static void Main(string[] args)
         {
 
-            Console.WriteLine("Session 05");
+         
 
             var builder = WebApplication.CreateBuilder(args);
 
