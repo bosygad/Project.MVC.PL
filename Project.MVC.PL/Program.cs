@@ -4,6 +4,7 @@ using Project.BLL.Services.Employees;
 using Project.DAL.Persistence.Data.Contexts;
 using Project.DAL.Persistence.Repositories.Departments;
 using Project.DAL.Persistence.Repositories.Employees;
+using Project.MVC.PL.Mapping;
 
 namespace Project.MVC.PL
 {
@@ -31,7 +32,7 @@ namespace Project.MVC.PL
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
-
+            builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfile()));
             //builder.Services.AddScoped<DbContextOptions<ApplicationDbContext>>((ServiceProvider =>
             //{
             //    //var options = new DbContextOptions<ApplicationDbContext>();

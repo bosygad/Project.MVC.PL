@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Project.BLL.Models.Departments;
 using Project.BLL.Services.Departments;
@@ -11,15 +12,18 @@ namespace Project.MVC.PL.Controllers.Departments
     {
         #region Services
         private readonly IDepartmentService _departmentService;
+        private readonly IMapper _mapper;
         private readonly ILogger<DepartmentController> _logger;
         private readonly IWebHostEnvironment _environment;
 
         public DepartmentController(
             IDepartmentService departmentService,
+            IMapper mapper,
             ILogger<DepartmentController> logger,
             IWebHostEnvironment environment)
         {
             _departmentService = departmentService;
+            _mapper = mapper;
             _logger = logger;
             _environment = environment;
         } 
@@ -81,31 +85,30 @@ namespace Project.MVC.PL.Controllers.Departments
             }
             try
             {
-                var CreateDepartment = new CreatedDepartmentDto()
-                {
-                   
-                    Code = departmentVM.Code,
-                    Name = departmentVM.Name,
-                    Description = departmentVM.Description,
-                    CreatedDate = departmentVM.CreatedDate,
+                var CreateDepartment = _mapper.Map<CreatedDepartmentDto>(departmentVM);
+                //var CreateDepartment = new CreatedDepartmentDto()
+                //{
 
-                };
+                //    Code = departmentVM.Code,
+                //    Name = departmentVM.Name,
+                //    Description = departmentVM.Description,
+                //    CreatedDate = departmentVM.CreatedDate,
+
+                //};
 
 
                 var Created = _departmentService.CreateDepartment(CreateDepartment) > 0;
-                if (Created)
+                if (!Created)
                 {
-                    TempData["Message"] = "Department is Created"; ;
+                    
                     //return RedirectToAction(nameof(Index));
-                }
-                else
-                {
+                
                     TempData["Message"] = "Department is Not Created"; ;
                     //Message = "Department is Not Created";
-                    //ModelState.AddModelError(string.Empty, Message);
-                    //return View(CreateDepartment);
+                    ModelState.AddModelError(string.Empty, Message);
+                   return View(departmentVM);
                 }
-                return RedirectToAction(nameof(Index));
+               
             }
             catch (Exception ex)
             {
@@ -113,8 +116,10 @@ namespace Project.MVC.PL.Controllers.Departments
                 _logger.LogError(ex, ex.Message);
                 Message = _environment.IsDevelopment() ? ex.Message : "An Erorr Has Occured during Creating The Department";
             }
-            ModelState.AddModelError(string.Empty, Message);
-            return View(departmentVM);
+            //ModelState.AddModelError(string.Empty, Message);
+            //return View(departmentVM);
+            TempData["Message"] = "Department is Created"; ;
+            return RedirectToAction(nameof(Index));
         } 
 
         #endregion
@@ -136,14 +141,16 @@ namespace Project.MVC.PL.Controllers.Departments
                 }
                 else
                 {
-                    return View(new DepartmentViewModel()
-                    {
-                        Code = department.Code,
-                        Name = department.Name,
-                        Description = department.Description,
-                        CreatedDate = department.CreatedDate,
+                    var departmentVM = _mapper.Map<DepartmentDetailsDto, DepartmentViewModel>(department);
+                    return View(departmentVM);
+                    //    new DepartmentViewModel()
+                    //{
+                    //    Code = department.Code,
+                    //    Name = department.Name,
+                    //    Description = department.Description,
+                    //    CreatedDate = department.CreatedDate,
                         
-                    });
+                    //});
                 }
             }
         }
@@ -159,15 +166,18 @@ namespace Project.MVC.PL.Controllers.Departments
             }
             try
             {
-                var UpdateDepartment = new UpdatedDepartmentDto()
-                {
-                    Id = id,
-                    Code = departmentViewModel.Code,
-                    Name = departmentViewModel.Name,
-                    Description = departmentViewModel.Description,
-                    CreatedDate = departmentViewModel.CreatedDate,
-                    
-                };
+                var UpdateDepartment = _mapper.Map<DepartmentViewModel, UpdatedDepartmentDto>(departmentViewModel);
+              /// or //  var UpdateDepartment = _mapper.Map<UpdatedDepartmentDto>(departmentViewModel);
+            
+                //var UpdateDepartment = new UpdatedDepartmentDto()
+                //{
+                //    Id = id,
+                //    Code = departmentViewModel.Code,
+                //    Name = departmentViewModel.Name,
+                //    Description = departmentViewModel.Description,
+                //    CreatedDate = departmentViewModel.CreatedDate,
+
+                //};
                 var Updated = _departmentService.UpdateDepartment(UpdateDepartment) > 0;
                 if (Updated)
                 {
