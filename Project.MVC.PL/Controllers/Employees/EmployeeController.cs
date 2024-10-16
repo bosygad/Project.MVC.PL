@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using GemBox.Document;
 using Microsoft.AspNetCore.Mvc;
+using Project.BLL.Common.Services.Attachments;
 using Project.BLL.Models.Employees;
 using Project.BLL.Services.Departments;
 using Project.BLL.Services.Employees;
 using Project.MVC.PL.ViewModels.Employees;
+using System.Reflection.Metadata;
 
 namespace Project.MVC.PL.Controllers.Employees
 {
@@ -15,19 +18,21 @@ namespace Project.MVC.PL.Controllers.Employees
         private readonly ILogger<EmployeeController> _logger;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _environment;
-
+        private readonly IAttachmentService _attachmentService;
 
         public EmployeeController(IEmployeeService employeeService,
            
             ILogger<EmployeeController> logger,
             IMapper mapper,
-            IWebHostEnvironment environment)
+            IWebHostEnvironment environment,
+            IAttachmentService attachmentService)
         {
             _employeeService = employeeService;
            
             _logger = logger;
             _mapper = mapper;
             _environment = environment;
+            _attachmentService = attachmentService;
         }
         #endregion
 
@@ -87,6 +92,7 @@ namespace Project.MVC.PL.Controllers.Employees
             var message = string.Empty;
             try
             {
+            // employeeVM.ImageName = _attachmentService.Upload(employeeVM.Image, "images");
                 //  var employee = _mapper.Map<CreatedEmployeeDto>(employeeVM);
                 var employee = new CreatedEmployeeDto()
                 {
@@ -102,8 +108,9 @@ namespace Project.MVC.PL.Controllers.Employees
                     EmployeeType = employeeVM.EmployeeType,
                     Gender = employeeVM.Gender,
                     DepartmentId = employeeVM.DepartmentId,
-                    
-                   
+                    Image = employeeVM.Image,
+
+
 
                 };
                 var Result = _employeeService.CreateEmployee(employee);
@@ -164,7 +171,7 @@ namespace Project.MVC.PL.Controllers.Employees
                         EmployeeType = employee.EmployeeType,
                         Gender = employee.Gender,
                         DepartmentId = employee.DepartmentId,
-                        Image = employee.Image,
+                       // Image = employee.Image,
 
 
 
@@ -186,24 +193,25 @@ namespace Project.MVC.PL.Controllers.Employees
             }
             try
             {
-                var employee = _mapper.Map<UpdatedEmployeeDto>(EmployeeViewModel);
-                //var employee = new UpdatedEmployeeDto()
-                //{
-                //    Id = id,
-                //    Name = EmployeeViewModel.Name,
-                //    Address = EmployeeViewModel.Address,
-                //    Email  = EmployeeViewModel.Email,
-                //    Age= EmployeeViewModel.Age,
-                //    Salary = EmployeeViewModel.Salary,
-                //    PhoneNumber = EmployeeViewModel.PhoneNumber,
-                //    IsActive = EmployeeViewModel.IsActive,
-                //    HiringDate = EmployeeViewModel.HiringDate,
-                //    EmployeeType = EmployeeViewModel.EmployeeType,
-                //    Gender = EmployeeViewModel.Gender,
-                //    DepartmentId = EmployeeViewModel.DepartmentId,
+                // var employee = _mapper.Map<UpdatedEmployeeDto>(EmployeeViewModel);
+                var employee = new UpdatedEmployeeDto()
+                {
+                    Id = id,
+                    Name = EmployeeViewModel.Name,
+                    Address = EmployeeViewModel.Address,
+                    Email = EmployeeViewModel.Email,
+                    Age = EmployeeViewModel.Age,
+                    Salary = EmployeeViewModel.Salary,
+                    PhoneNumber = EmployeeViewModel.PhoneNumber,
+                    IsActive = EmployeeViewModel.IsActive,
+                    HiringDate = EmployeeViewModel.HiringDate,
+                    EmployeeType = EmployeeViewModel.EmployeeType,
+                    Gender = EmployeeViewModel.Gender,
+                    DepartmentId = EmployeeViewModel.DepartmentId,
+                  //  Image = EmployeeViewModel.Image,
 
-                //};
-              var UpdatedEmployee = _employeeService.UpdateEmployee(employee) > 0;
+                };
+                var UpdatedEmployee = _employeeService.UpdateEmployee(employee) > 0;
                 if (UpdatedEmployee)
                 {
                     return RedirectToAction(nameof(Index));

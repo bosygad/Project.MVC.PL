@@ -46,6 +46,7 @@ namespace Project.BLL.Services.Employees
                                     Address = employee.Address,
                                     Gender = employee.Gender.ToString(),
                                     Department = employee.Department.Name
+                                    ,Image = employee.Image
                                   }).AsNoTracking().ToList();
             return employee;
 
@@ -74,7 +75,9 @@ namespace Project.BLL.Services.Employees
                     CreatedOn = DateTime.UtcNow,
                     LastModifiedBy=1,
                     LastModifiedOn= DateTime.UtcNow,
-                  Department = employee.Department.Name
+                  Department = employee.Department.Name,
+                  Image = employee.Image,
+                  
  
                 };
                 
@@ -100,13 +103,15 @@ namespace Project.BLL.Services.Employees
                 CreatedBy = 1,
                 LastModifiedBy = 1,
                 LastModifiedOn = DateTime.UtcNow,
+             Image = employeeDto.ImageName,
+                
                
 
             };
             if (employeeDto.Image is not null)
             {
-                
-            employee.Image = _attachmentService.Upload(employeeDto.Image, "Images");
+
+                employee.Image = _attachmentService.Upload(employeeDto.Image, "images");
             }
 
 

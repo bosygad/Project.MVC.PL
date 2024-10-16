@@ -10,7 +10,7 @@
 
 <br />
 
-<form asp-action="Index"  method="get" class="mt-5 row justify-content-center align-items-center" >
+<form asp-action="Index"  method="get" class="mt-5 row justify-content-center align-items-center"  enctype="multipart/form-data">
     <div class="row col-8 offset-1">
         <div class="col-8">
             <input type="text" name="search" class="form-control" id="SearchInput" placeholder="Search By Name" />
@@ -29,6 +29,8 @@
         <thead>
             <tr>
                 <th>@Html.DisplayNameFor(E => E.Name)</th>
+                <th>@Html.DisplayNameFor(E => E.Image)</th>
+
                 <th>@Html.DisplayNameFor(E => E.Email)</th>
                 <th>@Html.DisplayNameFor(E => E.Department)</th>
 
@@ -53,6 +55,8 @@
             {
                 <tr>
                     <td>@Html.DisplayFor(E =>employee.Name)</td>
+                    <td>@Html.DisplayFor(E => employee.Image)</td>
+
                     <td>@Html.DisplayFor(E =>employee.Email)</td>
                     <td>@Html.DisplayFor(E => employee.Department)</td>
 
