@@ -39,7 +39,9 @@ namespace Project.BLL.Models.Employees
         [Display(Name = "Employee Type")]
         public EmployeeType EmployeeType { get; set; }
 
+       
         public int? DepartmentId { get; set; }
-        public string? Department { get; set; }
+       
+
     }
 }

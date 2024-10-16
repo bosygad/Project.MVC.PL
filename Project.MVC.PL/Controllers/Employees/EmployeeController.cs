@@ -87,23 +87,23 @@ namespace Project.MVC.PL.Controllers.Employees
             var message = string.Empty;
             try
             {
-                var employee = _mapper.Map<CreatedEmployeeDto>(employeeVM);
-                //var employee = new CreatedEmployeeDto()
-                //{
+                //  var employee = _mapper.Map<CreatedEmployeeDto>(employeeVM);
+                var employee = new CreatedEmployeeDto()
+                {
 
-                //    Name = employeeVM.Name,
-                //    Address = employeeVM.Address,
-                //    Email = employeeVM.Email,
-                //    Age = employeeVM.Age,
-                //    Salary = employeeVM.Salary,
-                //    PhoneNumber = employeeVM.PhoneNumber,
-                //    IsActive = employeeVM.IsActive,
-                //    HiringDate = employeeVM.HiringDate,
-                //    EmployeeType = employeeVM.EmployeeType,
-                //    Gender = employeeVM.Gender,
-                //    DepartmentId= employeeVM.DepartmentId,
+                    Name = employeeVM.Name,
+                    Address = employeeVM.Address,
+                    Email = employeeVM.Email,
+                    Age = employeeVM.Age,
+                    Salary = employeeVM.Salary,
+                    PhoneNumber = employeeVM.PhoneNumber,
+                    IsActive = employeeVM.IsActive,
+                    HiringDate = employeeVM.HiringDate,
+                    EmployeeType = employeeVM.EmployeeType,
+                    Gender = employeeVM.Gender,
+                    DepartmentId = employeeVM.DepartmentId,
 
-                //};
+                };
                 var Result = _employeeService.CreateEmployee(employee);
                  if(Result > 0)
                 {
