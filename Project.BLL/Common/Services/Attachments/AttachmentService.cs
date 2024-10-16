@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Project.BLL.Common.Services.Attachments
 {
-    internal class AttachmentService : IAttachmentService
+    public class AttachmentService : IAttachmentService
     {
         private readonly List<string> _allowedExtensions = new() { ".png", ".jpg", ".jpeg" };
         private const int _allwedMaxsize = 2_097_152;

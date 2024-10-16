@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Project.BLL.Common.Services.Attachments;
 using Project.BLL.Services.Departments;
 using Project.BLL.Services.Employees;
 using Project.DAL.Persistence.Data.Contexts;
@@ -35,6 +36,7 @@ namespace Project.MVC.PL
             builder.Services.AddScoped<IUnitOfWork , UnitOfWork>();
             builder.Services.AddScoped<IDepartmentService , DepartmentService>();
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+            builder.Services.AddTransient<IAttachmentService , AttachmentService>();
 
             builder.Services.AddAutoMapper(M => M.AddProfile(new DepartmentProfile()));
             builder.Services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile()));

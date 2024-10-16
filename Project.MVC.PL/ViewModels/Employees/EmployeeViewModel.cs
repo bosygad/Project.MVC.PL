@@ -36,7 +36,10 @@ namespace Project.MVC.PL.ViewModels.Employees
 
         [Display(Name = "Department")]
         public int? DepartmentId { get; set; }
-      
+
+        public string? Image { get; set; }
+
+
 
     }
 }

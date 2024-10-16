@@ -102,6 +102,8 @@ namespace Project.MVC.PL.Controllers.Employees
                     EmployeeType = employeeVM.EmployeeType,
                     Gender = employeeVM.Gender,
                     DepartmentId = employeeVM.DepartmentId,
+                    
+                   
 
                 };
                 var Result = _employeeService.CreateEmployee(employee);
@@ -146,25 +148,29 @@ namespace Project.MVC.PL.Controllers.Employees
                 else
                 {
                     //ViewData["Departments"] = departmentService.GetAllDepartments();
-                    var UpdatedEmployee = _mapper.Map<EmployeeDetailsDto,EmployeeViewModel>(employee);
+                //    var UpdatedEmployee = _mapper.Map<EmployeeDetailsDto,EmployeeViewModel>(employee);
                     
-                    return View(UpdatedEmployee);
-                    //return View(new EmployeeViewModel()
-                    //{
-                    //    Name = employee.Name,
-                    //    Address = employee.Address,
-                    //    Email = employee.Email,
-                    //    Age = employee.Age,
-                    //    Salary = employee.Salary,
-                    //    PhoneNumber =employee.PhoneNumber,
-                    //    IsActive = employee.IsActive,
-                    //    HiringDate = employee.HiringDate,
-                    //    EmployeeType = employee.EmployeeType,
-                    //    Gender = employee.Gender,
-                        
-                        
+                    //return View(UpdatedEmployee);
+                    return View(new EmployeeViewModel()
+                    {
+                        Name = employee.Name,
+                        Address = employee.Address,
+                        Email = employee.Email,
+                        Age = employee.Age,
+                        Salary = employee.Salary,
+                        PhoneNumber = employee.PhoneNumber,
+                        IsActive = employee.IsActive,
+                        HiringDate = employee.HiringDate,
+                        EmployeeType = employee.EmployeeType,
+                        Gender = employee.Gender,
+                        DepartmentId = employee.DepartmentId,
+                        Image = employee.Image,
 
-                    //});
+
+
+
+
+                    });
                 }
             }
         

@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Project.DAL\Project.DAL.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+    <PackageReference Include="System.Collections" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Common\Services\" />
+    <ProjectReference Include="..\Project.DAL\Project.DAL.csproj" />
   </ItemGroup>
 
 </Project>

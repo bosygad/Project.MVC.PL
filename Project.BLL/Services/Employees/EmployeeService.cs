@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Project.BLL.Common.Services.Attachments;
 using Project.BLL.Models.Employees;
 using Project.DAL.Entities.Empeloyees;
 using Project.DAL.Persistence.Repositories.Employees;
@@ -15,12 +16,16 @@ namespace Project.BLL.Services.Employees
     public class EmployeeService : IEmployeeService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IAttachmentService _attachmentService;
 
         //private readonly IEmployeeRepository _employeeRepository;
 
-        public EmployeeService(/*IEmployeeRepository employeeRepository*/ IUnitOfWork unitOfWork)
+        public EmployeeService(/*IEmployeeRepository employeeRepository*/
+            IUnitOfWork unitOfWork ,
+            IAttachmentService attachmentService)
         {
             _unitOfWork = unitOfWork;
+            _attachmentService = attachmentService;
             //_employeeRepository = employeeRepository;
         }
         public IEnumerable<EmployeeDto> GetEmployees(string search)
@@ -78,6 +83,7 @@ namespace Project.BLL.Services.Employees
         }
         public int CreateEmployee(CreatedEmployeeDto employeeDto)
         {
+          
             var employee = new Employee()
             {
                 Name = employeeDto.Name,
@@ -94,10 +100,17 @@ namespace Project.BLL.Services.Employees
                 CreatedBy = 1,
                 LastModifiedBy = 1,
                 LastModifiedOn = DateTime.UtcNow,
+               
 
             };
+            if (employeeDto.Image is not null)
+            {
+                
+            employee.Image = _attachmentService.Upload(employeeDto.Image, "Images");
+            }
 
-             _unitOfWork.EmployeeRepository.Add(employee);
+
+            _unitOfWork.EmployeeRepository.Add(employee);
            return _unitOfWork.Complete();
         }
 
@@ -120,6 +133,7 @@ namespace Project.BLL.Services.Employees
                 CreatedBy = 1,
                 LastModifiedBy = 1,
                 LastModifiedOn = DateTime.UtcNow,
+
             };
            _unitOfWork.EmployeeRepository.Update(employee);
             return _unitOfWork.Complete();

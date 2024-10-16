@@ -1,4 +1,5 @@
-﻿using Project.DAL.Common.Enums;
+﻿using Microsoft.AspNetCore.Http;
+using Project.DAL.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -41,6 +42,8 @@ namespace Project.BLL.Models.Employees
 
        
         public int? DepartmentId { get; set; }
+
+        public IFormFile? Image {  get; set; }
        
 
     }
