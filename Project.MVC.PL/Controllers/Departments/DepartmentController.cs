@@ -141,7 +141,7 @@ namespace Project.MVC.PL.Controllers.Departments
                 }
                 else
                 {
-                    var departmentVM = _mapper.Map<DepartmentDetailsDto, DepartmentViewModel>(department);
+                    var departmentVM = _mapper.Map< DepartmentViewModel>(department);
                     return View(departmentVM);
                     //    new DepartmentViewModel()
                     //{

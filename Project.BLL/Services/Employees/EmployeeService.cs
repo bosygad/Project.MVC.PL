@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Project.BLL.Models.Employees;
 using Project.DAL.Entities.Empeloyees;
 using Project.DAL.Persistence.Repositories.Employees;
+using Project.DAL.Persistence.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,15 +14,18 @@ namespace Project.BLL.Services.Employees
 {
     public class EmployeeService : IEmployeeService
     {
-        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public EmployeeService(IEmployeeRepository employeeRepository)
+        //private readonly IEmployeeRepository _employeeRepository;
+
+        public EmployeeService(/*IEmployeeRepository employeeRepository*/ IUnitOfWork unitOfWork)
         {
-            _employeeRepository = employeeRepository;
+            _unitOfWork = unitOfWork;
+            //_employeeRepository = employeeRepository;
         }
         public IEnumerable<EmployeeDto> GetEmployees(string search)
         {
-           var employee = _employeeRepository
+           var employee = _unitOfWork.EmployeeRepository
                 .GetIQueryable()
                 .Where(E => !E.IsDeleted && (string.IsNullOrEmpty(search) || E.Name.ToLower().Contains(search.ToLower())))
                 .Include(E => E.Department)
@@ -45,7 +49,7 @@ namespace Project.BLL.Services.Employees
 
         public EmployeeDetailsDto? GetEmployeeById(int id)
         {
-            var employee = _employeeRepository.GetById(id);
+            var employee = _unitOfWork.EmployeeRepository.GetById(id);
             if (employee is not null) 
             {
                 return new EmployeeDetailsDto()
@@ -93,7 +97,8 @@ namespace Project.BLL.Services.Employees
 
             };
 
-            return _employeeRepository.Add(employee);
+             _unitOfWork.EmployeeRepository.Add(employee);
+           return _unitOfWork.Complete();
         }
 
 
@@ -116,16 +121,18 @@ namespace Project.BLL.Services.Employees
                 LastModifiedBy = 1,
                 LastModifiedOn = DateTime.UtcNow,
             };
-            return _employeeRepository.Update(employee);
+           _unitOfWork.EmployeeRepository.Update(employee);
+            return _unitOfWork.Complete();
         }
         public bool DeleteEmployee(int id)
         {
-            var employee = _employeeRepository.GetById(id);
+            var employeeRepo = _unitOfWork.EmployeeRepository;
+            var employee = employeeRepo.GetById(id);
             if(employee is { })
             {
-                return _employeeRepository.Delete(employee) > 0;
+                 employeeRepo.Delete(employee) ;
             }
-            return false;
+            return _unitOfWork.Complete()>0;
         }
 
      

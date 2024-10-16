@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Project.BLL.Models.Employees;
 using Project.BLL.Services.Departments;
 using Project.BLL.Services.Employees;
@@ -12,17 +13,20 @@ namespace Project.MVC.PL.Controllers.Employees
         private readonly IEmployeeService _employeeService;
       
         private readonly ILogger<EmployeeController> _logger;
+        private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _environment;
 
 
         public EmployeeController(IEmployeeService employeeService,
            
             ILogger<EmployeeController> logger,
+            IMapper mapper,
             IWebHostEnvironment environment)
         {
             _employeeService = employeeService;
            
             _logger = logger;
+            _mapper = mapper;
             _environment = environment;
         }
         #endregion
@@ -83,22 +87,23 @@ namespace Project.MVC.PL.Controllers.Employees
             var message = string.Empty;
             try
             {
-                var employee = new CreatedEmployeeDto()
-                {
-                  
-                    Name = employeeVM.Name,
-                    Address = employeeVM.Address,
-                    Email = employeeVM.Email,
-                    Age = employeeVM.Age,
-                    Salary = employeeVM.Salary,
-                    PhoneNumber = employeeVM.PhoneNumber,
-                    IsActive = employeeVM.IsActive,
-                    HiringDate = employeeVM.HiringDate,
-                    EmployeeType = employeeVM.EmployeeType,
-                    Gender = employeeVM.Gender,
-                    DepartmentId= employeeVM.DepartmentId,
+                var employee = _mapper.Map<CreatedEmployeeDto>(employeeVM);
+                //var employee = new CreatedEmployeeDto()
+                //{
 
-                };
+                //    Name = employeeVM.Name,
+                //    Address = employeeVM.Address,
+                //    Email = employeeVM.Email,
+                //    Age = employeeVM.Age,
+                //    Salary = employeeVM.Salary,
+                //    PhoneNumber = employeeVM.PhoneNumber,
+                //    IsActive = employeeVM.IsActive,
+                //    HiringDate = employeeVM.HiringDate,
+                //    EmployeeType = employeeVM.EmployeeType,
+                //    Gender = employeeVM.Gender,
+                //    DepartmentId= employeeVM.DepartmentId,
+
+                //};
                 var Result = _employeeService.CreateEmployee(employee);
                  if(Result > 0)
                 {
@@ -141,22 +146,25 @@ namespace Project.MVC.PL.Controllers.Employees
                 else
                 {
                     //ViewData["Departments"] = departmentService.GetAllDepartments();
-                    return View(new EmployeeViewModel()
-                    {
-                        Name = employee.Name,
-                        Address = employee.Address,
-                        Email = employee.Email,
-                        Age = employee.Age,
-                        Salary = employee.Salary,
-                        PhoneNumber =employee.PhoneNumber,
-                        IsActive = employee.IsActive,
-                        HiringDate = employee.HiringDate,
-                        EmployeeType = employee.EmployeeType,
-                        Gender = employee.Gender,
+                    var UpdatedEmployee = _mapper.Map<EmployeeDetailsDto,EmployeeViewModel>(employee);
+                    
+                    return View(UpdatedEmployee);
+                    //return View(new EmployeeViewModel()
+                    //{
+                    //    Name = employee.Name,
+                    //    Address = employee.Address,
+                    //    Email = employee.Email,
+                    //    Age = employee.Age,
+                    //    Salary = employee.Salary,
+                    //    PhoneNumber =employee.PhoneNumber,
+                    //    IsActive = employee.IsActive,
+                    //    HiringDate = employee.HiringDate,
+                    //    EmployeeType = employee.EmployeeType,
+                    //    Gender = employee.Gender,
                         
                         
 
-                    });
+                    //});
                 }
             }
         
@@ -172,22 +180,23 @@ namespace Project.MVC.PL.Controllers.Employees
             }
             try
             {
-                var employee = new UpdatedEmployeeDto()
-                {
-                    Id = id,
-                    Name = EmployeeViewModel.Name,
-                    Address = EmployeeViewModel.Address,
-                    Email  = EmployeeViewModel.Email,
-                    Age= EmployeeViewModel.Age,
-                    Salary = EmployeeViewModel.Salary,
-                    PhoneNumber = EmployeeViewModel.PhoneNumber,
-                    IsActive = EmployeeViewModel.IsActive,
-                    HiringDate = EmployeeViewModel.HiringDate,
-                    EmployeeType = EmployeeViewModel.EmployeeType,
-                    Gender = EmployeeViewModel.Gender,
-                    DepartmentId = EmployeeViewModel.DepartmentId,
+                var employee = _mapper.Map<UpdatedEmployeeDto>(EmployeeViewModel);
+                //var employee = new UpdatedEmployeeDto()
+                //{
+                //    Id = id,
+                //    Name = EmployeeViewModel.Name,
+                //    Address = EmployeeViewModel.Address,
+                //    Email  = EmployeeViewModel.Email,
+                //    Age= EmployeeViewModel.Age,
+                //    Salary = EmployeeViewModel.Salary,
+                //    PhoneNumber = EmployeeViewModel.PhoneNumber,
+                //    IsActive = EmployeeViewModel.IsActive,
+                //    HiringDate = EmployeeViewModel.HiringDate,
+                //    EmployeeType = EmployeeViewModel.EmployeeType,
+                //    Gender = EmployeeViewModel.Gender,
+                //    DepartmentId = EmployeeViewModel.DepartmentId,
 
-                };
+                //};
               var UpdatedEmployee = _employeeService.UpdateEmployee(employee) > 0;
                 if (UpdatedEmployee)
                 {
@@ -204,8 +213,9 @@ namespace Project.MVC.PL.Controllers.Employees
                _logger.LogError(ex , ex.Message);
                 message = _environment.IsDevelopment ()? ex.Message : "An Erorr Has Occured during Updating The Employee ";
             }
-            ModelState.AddModelError(string.Empty, message);
-            return View(EmployeeViewModel);
+           // ModelState.AddModelError(string.Empty, message);
+           // return View(EmployeeViewModel);
+           return RedirectToAction(nameof(Index)); 
         }
         #endregion
 
