@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Project.BLL.Models.Departments;
 using Project.BLL.Services.Departments;
@@ -11,15 +12,18 @@ namespace Project.MVC.PL.Controllers.Departments
     {
         #region Services
         private readonly IDepartmentService _departmentService;
+        private readonly IMapper _mapper;
         private readonly ILogger<DepartmentController> _logger;
         private readonly IWebHostEnvironment _environment;
 
         public DepartmentController(
             IDepartmentService departmentService,
+            IMapper mapper,
             ILogger<DepartmentController> logger,
             IWebHostEnvironment environment)
         {
             _departmentService = departmentService;
+            _mapper = mapper;
             _logger = logger;
             _environment = environment;
         } 
@@ -27,21 +31,21 @@ namespace Project.MVC.PL.Controllers.Departments
 
         #region Index
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
 
             //ViewData["Message"] ="ViweData";
             //ViewBag.Message = "ViewBag";
           
 
-            var departments = _departmentService.GetAllDepartments();
+            var departments = await _departmentService.GetAllDepartmentsAsync();
             return View(departments);
         } 
         #endregion
 
         #region Details
         [HttpGet]
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id is null)
             {
@@ -49,7 +53,7 @@ namespace Project.MVC.PL.Controllers.Departments
             }
             else
             {
-                var department = _departmentService.GetDepartmentById(id.Value);
+                var department = await _departmentService.GetDepartmentByIdAsync(id.Value);
                 if (department is null)
                 {
                     return NotFound();
@@ -72,7 +76,7 @@ namespace Project.MVC.PL.Controllers.Departments
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(DepartmentViewModel departmentVM)
+        public async Task<IActionResult> Create(DepartmentViewModel departmentVM)
         {
             var Message = string.Empty;
             if (!ModelState.IsValid)
@@ -81,31 +85,30 @@ namespace Project.MVC.PL.Controllers.Departments
             }
             try
             {
-                var CreateDepartment = new CreatedDepartmentDto()
+                var CreateDepartment =  _mapper.Map<CreatedDepartmentDto>(departmentVM);
+                //var CreateDepartment = new CreatedDepartmentDto()
+                //{
+
+                //    Code = departmentVM.Code,
+                //    Name = departmentVM.Name,
+                //    Description = departmentVM.Description,
+                //    CreatedDate = departmentVM.CreatedDate,
+
+                //};
+
+
+                var Created = await _departmentService.CreateDepartmentAsync(CreateDepartment) > 0;
+                if (!Created)
                 {
-                   
-                    Code = departmentVM.Code,
-                    Name = departmentVM.Name,
-                    Description = departmentVM.Description,
-                    CreatedDate = departmentVM.CreatedDate,
-
-                };
-
-
-                var Created = _departmentService.CreateDepartment(CreateDepartment) > 0;
-                if (Created)
-                {
-                    TempData["Message"] = "Department is Created"; ;
+                    
                     //return RedirectToAction(nameof(Index));
-                }
-                else
-                {
+                
                     TempData["Message"] = "Department is Not Created"; ;
                     //Message = "Department is Not Created";
-                    //ModelState.AddModelError(string.Empty, Message);
-                    //return View(CreateDepartment);
+                    ModelState.AddModelError(string.Empty, Message);
+                   return View(departmentVM);
                 }
-                return RedirectToAction(nameof(Index));
+               
             }
             catch (Exception ex)
             {
@@ -113,15 +116,17 @@ namespace Project.MVC.PL.Controllers.Departments
                 _logger.LogError(ex, ex.Message);
                 Message = _environment.IsDevelopment() ? ex.Message : "An Erorr Has Occured during Creating The Department";
             }
-            ModelState.AddModelError(string.Empty, Message);
-            return View(departmentVM);
+            //ModelState.AddModelError(string.Empty, Message);
+            //return View(departmentVM);
+            TempData["Message"] = "Department is Created"; ;
+            return RedirectToAction(nameof(Index));
         } 
 
         #endregion
 
         #region Update
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id is null)
             {
@@ -129,28 +134,30 @@ namespace Project.MVC.PL.Controllers.Departments
             }
             else
             {
-                var department = _departmentService.GetDepartmentById(id.Value);
+                var department = await _departmentService.GetDepartmentByIdAsync(id.Value);
                 if (department is null)
                 {
                     return NotFound();
                 }
                 else
                 {
-                    return View(new DepartmentViewModel()
-                    {
-                        Code = department.Code,
-                        Name = department.Name,
-                        Description = department.Description,
-                        CreatedDate = department.CreatedDate,
+                    var departmentVM = _mapper.Map< DepartmentViewModel>(department);
+                    return View(departmentVM);
+                    //    new DepartmentViewModel()
+                    //{
+                    //    Code = department.Code,
+                    //    Name = department.Name,
+                    //    Description = department.Description,
+                    //    CreatedDate = department.CreatedDate,
                         
-                    });
+                    //});
                 }
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, DepartmentViewModel departmentViewModel)
+        public async Task<IActionResult> Edit([FromRoute] int id, DepartmentViewModel departmentViewModel)
         {
             var message = string.Empty;
             if (!ModelState.IsValid)
@@ -159,16 +166,19 @@ namespace Project.MVC.PL.Controllers.Departments
             }
             try
             {
-                var UpdateDepartment = new UpdatedDepartmentDto()
-                {
-                    Id = id,
-                    Code = departmentViewModel.Code,
-                    Name = departmentViewModel.Name,
-                    Description = departmentViewModel.Description,
-                    CreatedDate = departmentViewModel.CreatedDate,
-                    
-                };
-                var Updated = _departmentService.UpdateDepartment(UpdateDepartment) > 0;
+                var UpdateDepartment = _mapper.Map<DepartmentViewModel, UpdatedDepartmentDto>(departmentViewModel);
+              /// or //  var UpdateDepartment = _mapper.Map<UpdatedDepartmentDto>(departmentViewModel);
+            
+                //var UpdateDepartment = new UpdatedDepartmentDto()
+                //{
+                //    Id = id,
+                //    Code = departmentViewModel.Code,
+                //    Name = departmentViewModel.Name,
+                //    Description = departmentViewModel.Description,
+                //    CreatedDate = departmentViewModel.CreatedDate,
+
+                //};
+                var Updated = await _departmentService.UpdateDepartmentAsync(UpdateDepartment) > 0;
                 if (Updated)
                 {
                     return RedirectToAction(nameof(Index));
@@ -196,7 +206,7 @@ namespace Project.MVC.PL.Controllers.Departments
 
         #region Delete
         [HttpGet]
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id is null)
             {
@@ -205,7 +215,7 @@ namespace Project.MVC.PL.Controllers.Departments
             }
             else
             {
-                var department = _departmentService.GetDepartmentById(id.Value);
+                var department = await _departmentService.GetDepartmentByIdAsync(id.Value);
                 if (department is null)
                 {
                     return NotFound();
@@ -219,13 +229,13 @@ namespace Project.MVC.PL.Controllers.Departments
 
         [HttpPost]
           [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var message = string.Empty;
             try
             {
                 
-                var deleted = _departmentService.DeleteDepartment(id);
+                var deleted = await _departmentService.DeleteDepartmentAsync(id);
                 if (deleted)
                 {
                     return RedirectToAction(nameof(Index));

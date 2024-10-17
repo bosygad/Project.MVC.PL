@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Project.BLL.Common.Services.Attachments;
 using Project.BLL.Models.Employees;
 using Project.DAL.Entities.Empeloyees;
 using Project.DAL.Persistence.Repositories.Employees;
+using Project.DAL.Persistence.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,17 +15,24 @@ namespace Project.BLL.Services.Employees
 {
     public class EmployeeService : IEmployeeService
     {
-        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IAttachmentService _attachmentService;
 
-        public EmployeeService(IEmployeeRepository employeeRepository)
+        //private readonly IEmployeeRepository _employeeRepository;
+
+        public EmployeeService(/*IEmployeeRepository employeeRepository*/
+            IUnitOfWork unitOfWork ,
+            IAttachmentService attachmentService)
         {
-            _employeeRepository = employeeRepository;
+            _unitOfWork = unitOfWork;
+            _attachmentService = attachmentService;
+            //_employeeRepository = employeeRepository;
         }
-        public IEnumerable<EmployeeDto> GetAllEmployees()
+        public async Task<IEnumerable<EmployeeDto>> GetEmployeesAsync(string search)
         {
-           var employee = _employeeRepository
+           var employee = await _unitOfWork.EmployeeRepository
                 .GetIQueryable()
-                .Where(E => !E.IsDeleted)
+                .Where(E => !E.IsDeleted && (string.IsNullOrEmpty(search) || E.Name.ToLower().Contains(search.ToLower())))
                 .Include(E => E.Department)
                 .Select(employee => new EmployeeDto() 
                                   { 
@@ -36,15 +46,16 @@ namespace Project.BLL.Services.Employees
                                     Address = employee.Address,
                                     Gender = employee.Gender.ToString(),
                                     Department = employee.Department.Name
-                                  }).AsNoTracking().ToList();
+                                    ,Image = employee.Image
+                                  }).AsNoTracking().ToListAsync();
             return employee;
 
            
         }
 
-        public EmployeeDetailsDto? GetEmployeeById(int id)
+        public async Task<EmployeeDetailsDto?> GetEmployeeByIdAsync(int id)
         {
-            var employee = _employeeRepository.GetById(id);
+            var employee =await _unitOfWork.EmployeeRepository.GetByIdAsync(id);
             if (employee is not null) 
             {
                 return new EmployeeDetailsDto()
@@ -64,15 +75,18 @@ namespace Project.BLL.Services.Employees
                     CreatedOn = DateTime.UtcNow,
                     LastModifiedBy=1,
                     LastModifiedOn= DateTime.UtcNow,
-                  Department = employee.Department.Name
+                  Department = employee.Department.Name,
+                  Image = employee.Image,
+                  
  
                 };
                 
             }
             return null;
         }
-        public int CreateEmployee(CreatedEmployeeDto employeeDto)
+        public async Task<int> CreateEmployeeAsync(CreatedEmployeeDto employeeDto)
         {
+        //    employeeDto.ImageName = _attachmentService.Upload(employeeDto.Image, "images");
             var employee = new Employee()
             {
                 Name = employeeDto.Name,
@@ -89,14 +103,26 @@ namespace Project.BLL.Services.Employees
                 CreatedBy = 1,
                 LastModifiedBy = 1,
                 LastModifiedOn = DateTime.UtcNow,
+             //Image = employeeDto.ImageName,
+                
+               
 
             };
 
-            return _employeeRepository.Add(employee);
+            if (employeeDto.Image is not null)
+            {
+            employee.Image = await _attachmentService.UploadAsync(employeeDto.Image, "images");
+
+
+            }
+
+
+            _unitOfWork.EmployeeRepository.Add(employee);
+           return await _unitOfWork.CompleteAsync();
         }
 
 
-        public int UpdateEmployee(UpdatedEmployeeDto employeeDto)
+        public async Task<int> UpdateEmployeeAsync(UpdatedEmployeeDto employeeDto)
         {
             var employee = new Employee()
             {
@@ -114,17 +140,21 @@ namespace Project.BLL.Services.Employees
                 CreatedBy = 1,
                 LastModifiedBy = 1,
                 LastModifiedOn = DateTime.UtcNow,
+
             };
-            return _employeeRepository.Update(employee);
+          
+            _unitOfWork.EmployeeRepository.Update(employee);
+            return await _unitOfWork.CompleteAsync();
         }
-        public bool DeleteEmployee(int id)
+        public async Task<bool> DeleteEmployeeAsync(int id)
         {
-            var employee = _employeeRepository.GetById(id);
+            var employeeRepo = _unitOfWork.EmployeeRepository;
+            var employee = await employeeRepo.GetByIdAsync(id);
             if(employee is { })
             {
-                return _employeeRepository.Delete(employee) > 0;
+                 employeeRepo.Delete(employee) ;
             }
-            return false;
+            return await _unitOfWork.CompleteAsync()>0;
         }
 
      

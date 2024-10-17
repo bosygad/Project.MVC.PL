@@ -1,4 +1,5 @@
-﻿using Project.DAL.Common.Enums;
+﻿using Microsoft.AspNetCore.Http;
+using Project.DAL.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -39,6 +40,12 @@ namespace Project.BLL.Models.Employees
         [Display(Name = "Employee Type")]
         public EmployeeType EmployeeType { get; set; }
 
+       
         public int? DepartmentId { get; set; }
+
+        public IFormFile? Image {  get; set; }
+        public string? ImageName { get; set; }
+       
+
     }
 }

@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using GemBox.Document;
+using Microsoft.AspNetCore.Mvc;
+using Project.BLL.Common.Services.Attachments;
 using Project.BLL.Models.Employees;
 using Project.BLL.Services.Departments;
 using Project.BLL.Services.Employees;
 using Project.MVC.PL.ViewModels.Employees;
+using System.Reflection.Metadata;
 
 namespace Project.MVC.PL.Controllers.Employees
 {
@@ -12,34 +16,45 @@ namespace Project.MVC.PL.Controllers.Employees
         private readonly IEmployeeService _employeeService;
       
         private readonly ILogger<EmployeeController> _logger;
+        private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _environment;
-
+        private readonly IAttachmentService _attachmentService;
 
         public EmployeeController(IEmployeeService employeeService,
            
             ILogger<EmployeeController> logger,
-            IWebHostEnvironment environment)
+            IMapper mapper,
+            IWebHostEnvironment environment,
+            IAttachmentService attachmentService)
         {
             _employeeService = employeeService;
            
             _logger = logger;
+            _mapper = mapper;
             _environment = environment;
+            _attachmentService = attachmentService;
         }
         #endregion
 
         #region Index
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string search)
         {
-            var employee = _employeeService.GetAllEmployees();
+
+            var employee = await _employeeService.GetEmployeesAsync(search);
+
+          
+
             return View(employee);
         }
+
+       
         #endregion
 
         #region Details
         [HttpGet]
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id is null)
             {
@@ -47,7 +62,7 @@ namespace Project.MVC.PL.Controllers.Employees
             }
             else
             {
-                var employee = _employeeService.GetEmployeeById(id.Value);
+                var employee = await _employeeService.GetEmployeeByIdAsync(id.Value);
                 if (employee is null)
                 {
                     return NotFound();
@@ -68,7 +83,7 @@ namespace Project.MVC.PL.Controllers.Employees
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(EmployeeViewModel employeeVM) 
+        public async Task<IActionResult> Create(EmployeeViewModel employeeVM) 
         {
             if (!ModelState.IsValid)
             {
@@ -77,9 +92,11 @@ namespace Project.MVC.PL.Controllers.Employees
             var message = string.Empty;
             try
             {
+            /// employeeVM.ImageName = _attachmentService.Upload(employeeVM.Image, "images");
+                //  var employee = _mapper.Map<CreatedEmployeeDto>(employeeVM);
                 var employee = new CreatedEmployeeDto()
                 {
-                  
+
                     Name = employeeVM.Name,
                     Address = employeeVM.Address,
                     Email = employeeVM.Email,
@@ -90,10 +107,13 @@ namespace Project.MVC.PL.Controllers.Employees
                     HiringDate = employeeVM.HiringDate,
                     EmployeeType = employeeVM.EmployeeType,
                     Gender = employeeVM.Gender,
-                    DepartmentId= employeeVM.DepartmentId,
+                    DepartmentId = employeeVM.DepartmentId,
+                    Image = employeeVM.Image,
+
+
 
                 };
-                var Result = _employeeService.CreateEmployee(employee);
+                var Result = await _employeeService.CreateEmployeeAsync(employee);
                  if(Result > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -119,7 +139,7 @@ namespace Project.MVC.PL.Controllers.Employees
 
         #region Update
         [HttpGet]
-        public IActionResult Edit(int? id /*, [FromServices] IDepartmentService departmentService*/) 
+        public async Task<IActionResult> Edit(int? id /*, [FromServices] IDepartmentService departmentService*/) 
         {
             if (id is null)
             {
@@ -127,7 +147,7 @@ namespace Project.MVC.PL.Controllers.Employees
             }
             else
             {
-                var employee = _employeeService.GetEmployeeById(id.Value);
+                var employee = await _employeeService.GetEmployeeByIdAsync(id.Value);
                 if(employee is null)
                 {
                     return NotFound();
@@ -135,6 +155,9 @@ namespace Project.MVC.PL.Controllers.Employees
                 else
                 {
                     //ViewData["Departments"] = departmentService.GetAllDepartments();
+                //    var UpdatedEmployee = _mapper.Map<EmployeeDetailsDto,EmployeeViewModel>(employee);
+                    
+                    //return View(UpdatedEmployee);
                     return View(new EmployeeViewModel()
                     {
                         Name = employee.Name,
@@ -142,13 +165,17 @@ namespace Project.MVC.PL.Controllers.Employees
                         Email = employee.Email,
                         Age = employee.Age,
                         Salary = employee.Salary,
-                        PhoneNumber =employee.PhoneNumber,
+                        PhoneNumber = employee.PhoneNumber,
                         IsActive = employee.IsActive,
                         HiringDate = employee.HiringDate,
                         EmployeeType = employee.EmployeeType,
                         Gender = employee.Gender,
-                        
-                        
+                        DepartmentId = employee.DepartmentId,
+                       // Image = employee.Image,
+
+
+
+
 
                     });
                 }
@@ -158,7 +185,7 @@ namespace Project.MVC.PL.Controllers.Employees
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id , EmployeeViewModel EmployeeViewModel) 
+        public async Task<IActionResult> Edit([FromRoute] int id , EmployeeViewModel EmployeeViewModel) 
         {
         var message = string.Empty;
             if (!ModelState.IsValid) {
@@ -166,13 +193,14 @@ namespace Project.MVC.PL.Controllers.Employees
             }
             try
             {
+                // var employee = _mapper.Map<UpdatedEmployeeDto>(EmployeeViewModel);
                 var employee = new UpdatedEmployeeDto()
                 {
                     Id = id,
                     Name = EmployeeViewModel.Name,
                     Address = EmployeeViewModel.Address,
-                    Email  = EmployeeViewModel.Email,
-                    Age= EmployeeViewModel.Age,
+                    Email = EmployeeViewModel.Email,
+                    Age = EmployeeViewModel.Age,
                     Salary = EmployeeViewModel.Salary,
                     PhoneNumber = EmployeeViewModel.PhoneNumber,
                     IsActive = EmployeeViewModel.IsActive,
@@ -180,9 +208,10 @@ namespace Project.MVC.PL.Controllers.Employees
                     EmployeeType = EmployeeViewModel.EmployeeType,
                     Gender = EmployeeViewModel.Gender,
                     DepartmentId = EmployeeViewModel.DepartmentId,
+                  //  Image = EmployeeViewModel.Image,
 
                 };
-              var UpdatedEmployee = _employeeService.UpdateEmployee(employee) > 0;
+                var UpdatedEmployee = await _employeeService.UpdateEmployeeAsync(employee) > 0;
                 if (UpdatedEmployee)
                 {
                     return RedirectToAction(nameof(Index));
@@ -198,8 +227,9 @@ namespace Project.MVC.PL.Controllers.Employees
                _logger.LogError(ex , ex.Message);
                 message = _environment.IsDevelopment ()? ex.Message : "An Erorr Has Occured during Updating The Employee ";
             }
-            ModelState.AddModelError(string.Empty, message);
-            return View(EmployeeViewModel);
+           // ModelState.AddModelError(string.Empty, message);
+           // return View(EmployeeViewModel);
+           return RedirectToAction(nameof(Index)); 
         }
         #endregion
 
@@ -208,12 +238,12 @@ namespace Project.MVC.PL.Controllers.Employees
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var message = string.Empty;
             try
             {
-                var deletedEmlpoyee = _employeeService.DeleteEmployee(id);
+                var deletedEmlpoyee = await _employeeService.DeleteEmployeeAsync(id);
                 if (deletedEmlpoyee)
                 {
                     return RedirectToAction(nameof(Index));

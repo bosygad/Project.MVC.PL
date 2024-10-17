@@ -4,16 +4,22 @@
 @inject IDepartmentService departmentService
 @{
 
-  var Departments = new SelectList(departmentService.GetAllDepartments()
+  var Departments = new SelectList(await departmentService.GetAllDepartmentsAsync()
     , nameof(DepartmentDto.Id) , nameof(DepartmentDto.Name));
 }
 
-<form asp-action="@ViewBag.Action" method="post" class="col-8">
+<form asp-action="@ViewBag.Action" method="post" class="col-8" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly"></div>
     <div class="col-9 form-group mb-3">
         <label class="form-label " asp-for="Name"></label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="col-9 form-group mb-3">
+        <label class="form-label" asp-for="Image"></label>
+        <input asp-for="Image" class="form-control" />
+
     </div>
     <div class="col-9 form-group mb-3">
         <label class="form-label " asp-for="Email"></label>
@@ -100,6 +106,7 @@
         <input type="date" asp-for="HiringDate" class="form-control" />
 
     </div>
+   
     @if (ViewBag.Action == "Create")
     {
 

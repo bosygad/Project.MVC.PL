@@ -3,6 +3,7 @@ using Project.BLL.Models.Departments;
 using Project.DAL.Entities.Departments;
 using Project.DAL.Persistence.Data.Contexts;
 using Project.DAL.Persistence.Repositories.Departments;
+using Project.DAL.Persistence.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,33 +14,36 @@ namespace Project.BLL.Services.Departments
 {
     public class DepartmentService : IDepartmentService
     {
-        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DepartmentService(IDepartmentRepository departmentRepository)
+        //        private readonly IDepartmentRepository _departmentRepository;
+
+        public DepartmentService(/*IDepartmentRepository departmentRepository*/ IUnitOfWork unitOfWork)
         {
-            _departmentRepository = departmentRepository;
+            _unitOfWork = unitOfWork;
+            //  _departmentRepository = departmentRepository;
         }
-        public IEnumerable<DepartmentDto> GetAllDepartments()
+        public  async Task<IEnumerable<DepartmentDto>> GetAllDepartmentsAsync()
         {
-            var departments = _departmentRepository.GetIQueryable().Select(department => new DepartmentDto()
+            var departments = _unitOfWork.DepartmentRepository.GetIQueryable().Select(department => new DepartmentDto()
             {
                 Id = department.Id,
                 Code = department.Code,
                 Name = department.Name,
                 CreatedDate = department.CreatedDate,
-            }).AsNoTracking().ToList();
+            }).AsNoTracking().ToListAsync();
 
 
-            return departments;
+            return await departments;
 
         }
 
-        public DepartmentDetailsDto? GetDepartmentById(int id)
+        public async Task<DepartmentDetailsDto?> GetDepartmentByIdAsync(int id)
         {
-            var departments = _departmentRepository.GetById(id);
+            var departments = await _unitOfWork.DepartmentRepository.GetByIdAsync(id);
             if (departments is not null)
             {
-                return new DepartmentDetailsDto()
+                return  new DepartmentDetailsDto()
                 {
                     Id = departments.Id,
                     Code = departments.Code,
@@ -55,9 +59,9 @@ namespace Project.BLL.Services.Departments
             }
             return null;
         }
-        public int CreateDepartment(CreatedDepartmentDto departmentDto)
+        public  Task<int> CreateDepartmentAsync(CreatedDepartmentDto departmentDto)
         {
-            var department = new Department()
+            var department =  new Department()
             {
                 Code = departmentDto.Code,
                 Name = departmentDto.Name,
@@ -68,11 +72,12 @@ namespace Project.BLL.Services.Departments
                 LastModifiedBy = 1,
               LastModifiedOn = DateTime.UtcNow,
             };
-            return _departmentRepository.Add(department);
+             _unitOfWork.DepartmentRepository.Add(department);
+            return _unitOfWork.CompleteAsync();
 
         }
 
-        public int UpdateDepartment(UpdatedDepartmentDto departmentDto)
+        public async Task<int> UpdateDepartmentAsync(UpdatedDepartmentDto departmentDto)
         {
             var department = new Department()
             {
@@ -84,19 +89,21 @@ namespace Project.BLL.Services.Departments
                 LastModifiedBy = 1,
                 LastModifiedOn = DateTime.UtcNow,
             };
-            return _departmentRepository.Update(department);
+             _unitOfWork.DepartmentRepository.Update(department);
+            return await _unitOfWork.CompleteAsync();
 
         }
 
 
-        public bool DeleteDepartment(int id)
+        public async Task<bool> DeleteDepartmentAsync(int id)
         {
-            var department = _departmentRepository.GetById(id);
+            var departmentRepo =  _unitOfWork.DepartmentRepository;
+            var department = await departmentRepo.GetByIdAsync(id);
             if (department is { })
             {
-                return _departmentRepository.Delete(department) > 0;
+                 departmentRepo.Delete(department) ;
             }
-            return false;
+            return await _unitOfWork.CompleteAsync() > 0;
 
 
 
