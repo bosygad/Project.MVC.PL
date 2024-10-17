@@ -54,8 +54,8 @@
             @foreach (var employee in Model)
             {
                 <tr>
+                    <td><img src="~/files/images/@employee.Image" class="rounded" height="40" width="40" /></td>
                     <td>@Html.DisplayFor(E =>employee.Name)</td>
-                    <td>@Html.DisplayFor(E => employee.Image)</td>
 
                     <td>@Html.DisplayFor(E =>employee.Email)</td>
                     <td>@Html.DisplayFor(E => employee.Department)</td>

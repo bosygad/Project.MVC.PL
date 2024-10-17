@@ -39,10 +39,10 @@ namespace Project.MVC.PL.Controllers.Employees
         #region Index
 
         [HttpGet]
-        public IActionResult Index(string search)
+        public async Task<IActionResult> Index(string search)
         {
 
-            var employee = _employeeService.GetEmployees(search);
+            var employee = await _employeeService.GetEmployeesAsync(search);
 
           
 
@@ -54,7 +54,7 @@ namespace Project.MVC.PL.Controllers.Employees
 
         #region Details
         [HttpGet]
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id is null)
             {
@@ -62,7 +62,7 @@ namespace Project.MVC.PL.Controllers.Employees
             }
             else
             {
-                var employee = _employeeService.GetEmployeeById(id.Value);
+                var employee = await _employeeService.GetEmployeeByIdAsync(id.Value);
                 if (employee is null)
                 {
                     return NotFound();
@@ -83,7 +83,7 @@ namespace Project.MVC.PL.Controllers.Employees
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(EmployeeViewModel employeeVM) 
+        public async Task<IActionResult> Create(EmployeeViewModel employeeVM) 
         {
             if (!ModelState.IsValid)
             {
@@ -92,7 +92,7 @@ namespace Project.MVC.PL.Controllers.Employees
             var message = string.Empty;
             try
             {
-            // employeeVM.ImageName = _attachmentService.Upload(employeeVM.Image, "images");
+            /// employeeVM.ImageName = _attachmentService.Upload(employeeVM.Image, "images");
                 //  var employee = _mapper.Map<CreatedEmployeeDto>(employeeVM);
                 var employee = new CreatedEmployeeDto()
                 {
@@ -113,7 +113,7 @@ namespace Project.MVC.PL.Controllers.Employees
 
 
                 };
-                var Result = _employeeService.CreateEmployee(employee);
+                var Result = await _employeeService.CreateEmployeeAsync(employee);
                  if(Result > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -139,7 +139,7 @@ namespace Project.MVC.PL.Controllers.Employees
 
         #region Update
         [HttpGet]
-        public IActionResult Edit(int? id /*, [FromServices] IDepartmentService departmentService*/) 
+        public async Task<IActionResult> Edit(int? id /*, [FromServices] IDepartmentService departmentService*/) 
         {
             if (id is null)
             {
@@ -147,7 +147,7 @@ namespace Project.MVC.PL.Controllers.Employees
             }
             else
             {
-                var employee = _employeeService.GetEmployeeById(id.Value);
+                var employee = await _employeeService.GetEmployeeByIdAsync(id.Value);
                 if(employee is null)
                 {
                     return NotFound();
@@ -185,7 +185,7 @@ namespace Project.MVC.PL.Controllers.Employees
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id , EmployeeViewModel EmployeeViewModel) 
+        public async Task<IActionResult> Edit([FromRoute] int id , EmployeeViewModel EmployeeViewModel) 
         {
         var message = string.Empty;
             if (!ModelState.IsValid) {
@@ -211,7 +211,7 @@ namespace Project.MVC.PL.Controllers.Employees
                   //  Image = EmployeeViewModel.Image,
 
                 };
-                var UpdatedEmployee = _employeeService.UpdateEmployee(employee) > 0;
+                var UpdatedEmployee = await _employeeService.UpdateEmployeeAsync(employee) > 0;
                 if (UpdatedEmployee)
                 {
                     return RedirectToAction(nameof(Index));
@@ -238,12 +238,12 @@ namespace Project.MVC.PL.Controllers.Employees
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var message = string.Empty;
             try
             {
-                var deletedEmlpoyee = _employeeService.DeleteEmployee(id);
+                var deletedEmlpoyee = await _employeeService.DeleteEmployeeAsync(id);
                 if (deletedEmlpoyee)
                 {
                     return RedirectToAction(nameof(Index));

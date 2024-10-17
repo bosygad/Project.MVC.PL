@@ -11,11 +11,11 @@ namespace Project.BLL.Common.Services.Attachments
     {
         private readonly List<string> _allowedExtensions = new() { ".png", ".jpg", ".jpeg" };
         private const int _allwedMaxsize = 2_097_152;
-        public string Upload(IFormFile file, string FolderName)
+        public async Task<string> UploadAsync(IFormFile file, string FolderName)
         {
             var extension = Path.GetExtension(file.FileName);
 
-            if (_allowedExtensions.Contains(extension))
+            if (!_allowedExtensions.Contains(extension))
                 return null;
 
             if (file.Length > _allwedMaxsize)
@@ -36,8 +36,8 @@ namespace Project.BLL.Common.Services.Attachments
             }
 
             using var FileStream = new FileStream(FilePath, FileMode.Create);
-            file.CopyTo(FileStream);
-            return FileName;
+         await   file.CopyToAsync(FileStream);
+            return  FileName;
         }
         public bool Delete(string FilePath)
         {
