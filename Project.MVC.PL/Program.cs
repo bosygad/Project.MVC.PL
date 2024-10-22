@@ -17,7 +17,7 @@ namespace Project.MVC.PL
         
         public static void Main(string[] args)
         {
-            Console.WriteLine("Creation Session 06");
+           
 
 
             var builder = WebApplication.CreateBuilder(args);
