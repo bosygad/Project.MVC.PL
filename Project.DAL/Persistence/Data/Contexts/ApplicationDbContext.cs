@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Project.DAL.Entities;
 using Project.DAL.Entities.Departments;
 using Project.DAL.Entities.Empeloyees;
 using System;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Project.DAL.Persistence.Data.Contexts
 {
-    public class ApplicationDbContext: IdentityDbContext
+    public class ApplicationDbContext: IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
