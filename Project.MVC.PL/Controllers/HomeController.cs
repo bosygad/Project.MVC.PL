@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.MVC.PL.ViewModels.Common;
 using System.Diagnostics;
 
 namespace Project.MVC.PL.Controllers
 {
+    //[Authorize(/*Roles = "Admin" ,*/ AuthenticationSchemes = "Identity.Application")]
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

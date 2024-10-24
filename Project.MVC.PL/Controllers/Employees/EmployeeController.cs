@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GemBox.Document;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.BLL.Common.Services.Attachments;
 using Project.BLL.Models.Employees;
@@ -10,6 +11,7 @@ using System.Reflection.Metadata;
 
 namespace Project.MVC.PL.Controllers.Employees
 {
+    [Authorize]
     public class EmployeeController : Controller
     {
         #region Srevices
