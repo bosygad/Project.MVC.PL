@@ -112,5 +112,19 @@ namespace Project.MVC.PL.Controllers
                 return View(viewModel) ;
         }
         #endregion
+
+
+         #region SignOut
+
+       public async Task<IActionResult> SignOut()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction(nameof(SignIn));
+
+
+        }
+        #endregion
+
+       
     }
 }
