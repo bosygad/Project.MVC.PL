@@ -8,6 +8,7 @@
 <div class="main-agileinfo">
 			<div class="agileits-top">
 				<form  asp-action="SignUp" >
+					<div asp-validation-summary="ModelOnly"></div>
 					<input class="text" asp-for="FirstName" type="text"  placeholder="First Name" required="" />
 					<input class="text" asp-for="LastName" type="text"  placeholder="Last Name" required="" />
 					<input class="text" asp-for="UserName" type="text"  placeholder="Username" required="">
@@ -23,6 +24,14 @@
 					</div>
 					<input type="submit" value="SIGNUP">
 				</form>
-				<p>Don't have an Account? <a asp-action ="SignIn"> Login Now!</a></p>
+				<p>you have an Account? <a asp-action ="SignIn"> Login Now!</a></p>
 			</div>
 		</div>
+
+					@section ValidationScripts {
+
+@* 
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script> *@
+    <partial name="_ValidationScriptsPartial" />
+}

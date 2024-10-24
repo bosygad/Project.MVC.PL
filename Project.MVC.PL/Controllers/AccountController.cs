@@ -75,6 +75,42 @@ namespace Project.MVC.PL.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> SignIn(SignInViewModel viewModel)
+        {
+            if(!ModelState.IsValid)
+                return BadRequest();
+
+            var User = await _userManager.FindByEmailAsync(viewModel.Email);
+
+            if (User is { })
+            {
+                var flag = await _userManager.CheckPasswordAsync(User, viewModel.password);
+                if (flag)
+                {
+                    var result = await _signInManager.PasswordSignInAsync(User, viewModel.password, viewModel.RememberMe, true);
+                    if (result.IsNotAllowed)
+                        ModelState.AddModelError(string.Empty, "Your Account is Not Confirm Yet !!");
+
+
+                    if (result.IsLockedOut)
+                        ModelState.AddModelError(string.Empty, "Your Account Is Locked");
+
+
+                    if (result.Succeeded)
+                        return RedirectToAction(nameof(HomeController.Index), "Home");
+
+
+
+
+                }
+
+                
+            }
+                ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
+                return View(viewModel) ;
+        }
         #endregion
     }
 }
