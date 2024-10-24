@@ -62,6 +62,29 @@ namespace Project.MVC.PL
 
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/SignIn";
+                options.AccessDeniedPath = "/Home/Error";
+                options.ExpireTimeSpan = TimeSpan.FromDays(1);
+                options.LogoutPath = "/Account/SignIn";
+
+            });
+
+         
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = "Identity.Application";
+                options.DefaultChallengeScheme = "Identity.Application";
+
+            }).AddCookie("Admin", ".AspNetCore.Admin", options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.AccessDeniedPath = "/Home/Error";
+                options.ExpireTimeSpan = TimeSpan.FromDays(10);
+                options.LogoutPath = "/Account/SignIn";
+            });
           
             //builder.Services.AddScoped<DbContextOptions<ApplicationDbContext>>((ServiceProvider =>
             //{
@@ -87,6 +110,8 @@ namespace Project.MVC.PL
 
             app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseAuthorization();
 
             app.MapControllerRoute(

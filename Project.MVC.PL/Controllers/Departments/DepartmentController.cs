@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Project.BLL.Models.Departments;
@@ -8,6 +9,7 @@ using Project.MVC.PL.ViewModels.Departments;
 
 namespace Project.MVC.PL.Controllers.Departments
 {
+    [Authorize]
     public class DepartmentController : Controller
     {
         #region Services
